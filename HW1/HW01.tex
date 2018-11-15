@@ -1,0 +1,438 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW1}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Question 1.
+	\begin{enumerate}
+		\item [(a)] Describe the study design being used to address the question of interest. What are the treatment groups and their corresponding sample sizes?
+		\item [(b)] What are the experimental and measurement units for this study?
+		\item [(c)] Write down an appropriate statistical model for these data and describe its assumptions in the context of this study. What is the hypothesis that the investigators are interested in testing?
+	\end{enumerate}
+\begin{sol}
+	For $(a)$:\vskip 2mm
+	This is a completely randomized (with no block) experiment. The objective is to understand the following:
+	\begin{enumerate}
+		\item [(1)] If the acid rain harms the tree or not
+		\item [(2)] If the answer is `Yes', does it depends on the pH value of the rain.
+	\end{enumerate}
+	The treatment factors are five different pH values assigned to five groups of yellow birch seedlings (experimental units). So seedlings given the same pH treatment form a treatment group, and the sample sizes of all groups are the same, which is $240/5 = 48$.
+	\vskip 2mm
+	For $(b)$:\vskip 2mm
+	In this case, the experimental and measurement units are the same, both are the yellow birch seedlings. \vskip 2mm
+	For $(c)$:\vskip 2mm
+	The statistical model would be a completely randomized design (I am using the book's notation here):
+	\begin{align*}
+		Y_{it} &= \mu + \tau_i + \epsilon_{it},\\
+		\epsilon_{it} &\sim N(0, \sigma^2) \\
+		\epsilon_{it}'s &\text{ are } i.i.d, \\
+		i &= 1, \ldots, 5, t = 1, \ldots, 48
+	\end{align*}
+         Here $Y_{it}$ is the total plant (dry) weight measured after 17 weeks(response). $\mu$ is the mean value of the dry weight without acid rain treatment. $\tau_i$ is the impact of the i-th ph value to the weight of the seedlings, and $\epsilon_{it}$ is the error variable (minor source of variation). $\sigma^2$ is an unknown constant representing the variance of the error.\vskip 2mm
+         The hypothesis here is:
+         \begin{align*}
+         	H_0: \tau_1 &= \tau_2 = \ldots = \tau_5 s\\
+         	H_a: \tau_i &\neq \tau_j \text{ for some }i \neq j
+         \end{align*}
+         $H_0$ is translated as the impact of pH values on the weight of seedlings are the same. $H_1$ is translated as at least two different pH values do different harms to the seedlings.\vskip 2mm
+\end{sol}
+Question 2.
+\begin{sol}
+	The R code for this question is attached as HW1Q2.R. It is self contained with comments. In our solution to the questions, we will quote the line number of the code wherever needed to support our results.\vskip 2mm
+	For $(a)$:\vskip 2mm
+	We design a completely randomized experiment with two treatment factors (A and B). The experimental units are the $185$ male patients aged from $50$ to $70$ years old and the measurement units are their blood pressure after $12$ weeks.\vskip 2mm
+	So the design is a one way ANOVA model:
+	\begin{align*}
+		Y_{it} &= \mu + \tau_i + \epsilon_{it}\\
+		\epsilon_{it} &\sim N(0, \sigma^2) \\
+		\epsilon_{it}'s &\text{ are }i.i.d
+	\end{align*}
+	Here $Y_{it}$ is the blood pressure measured after $12$ weeks(response), $\mu$ is the mean blood pressure without treatment, $\tau_i$ is the mean impact on blood pressure for the i-th treatment ($i = 1$ means treatment A, $i = 2$ means treatment B), $\epsilon_{it}$ is the error variable (covariates, etc).\vskip 2mm
+	The number of levels of treament is $v = 2$, so $i = 1, 2$. In each level, we have numbers of observations $r_1 = 90, r_2 = 95$(R code line $1-19$). The total number of observation is then $n = r_1 + r_2 = 185$. \vskip 2mm 
+	In the model above, we assumed independence, normality and constant variance for our response. Independence is met since the blood pressure is measured among different patients. Normality should be supported by relatively large sample. Constant variance is met since we are focusing on a particular age group ($50$ to $70$ years) and gender (male only), also human blood pressure tends to stay within the same range(providing it is wide enough)\vskip 2mm
+	To check normality roughly, we sketched a histogram on the blood pressure (R code line $21-22$)\vskip 2mm
+	\begin{center}
+	\includegraphics[width = 10cm]{q2ahist.jpg}
+	\end{center}
+	It does approximately look like fitting into the pattern of normal distribution.
+	Our hypothesis is as following: 
+	\begin{align*}
+		H_0: \tau_1 &= \tau_2\\
+		H_a: \tau_1 &\neq \tau_2
+	\end{align*}
+	$H_0$ is interpreted as treatment A and treatment B do not make a difference on patient blood pressure. $H_a$ is the opposite statement as $H_0$.\vskip 2mm
+	From the result of ANOVA model, we know that under the null hypothesis,  $\frac{\text{MST}}{\text{MSE}} \sim F_{v-1, n - v} = F_{1, 183}$. 
+	First we run R code line $24-25$ to get a boxplot:\vskip 2mm
+	\begin{center}
+	\includegraphics[width=8cm]{q2aboxplot.jpg}
+	\end{center}
+	which shows support for rejecting the null.\vskip 2mm
+	Then we run R code line $27-32$ to get ANOVA table:\vskip 2mm
+	\begin{center}
+	\includegraphics[width=10cm]{q2aanova.jpg}
+	\end{center}
+	with $p$ value as $0.007173$, we consider it small enough (smaller than $0.01$) to reject the null hypothesis\vskip 2mm
+	So the conclusion is that we think there is a difference of effect on the patients' blood pressure between the two treatments.\vskip 2mm
+	Thus finished part $(a)$.\vskip 2mm
+	For part $(b)$:\vskip 2mm
+	To do this part we implemented two R packages: mosaic and ggplot2(R code line $3-4$)\vskip 2mm
+	The hypothesis is the following:
+	\begin{align*}
+		H_0: \mu_A &= \mu_B\\
+		H_a: \mu_A &\neq \mu B
+	\end{align*}
+	$\mu_A, \mu_B$ separately represents the sample mean of the blood pressure measurement in each treatment.\vskip 2mm
+	Please refer to R code line $34-60$ for this part. \vskip 2mm
+	It needs to be pointed out that there are $\frac{185!}{90!95!}$ different permutations in the randomization process, but to save time we are only simulating with $1000$ trials.However from the histogram plot we see that it is good enough to approximate the real sample distribution\vskip 2mm
+	\begin{center}
+	\includegraphics[width = 10cm]{hw1q2bggplot.jpg}
+	\end{center}
+	The p-value we get here is $0.003$(the sub area of the bell to the right of red line), which is good enough for us to reject $H_0$, so we still get the same conclusion as in $(a)$ that there is a difference between treatment A and B.
+	
+\end{sol}
+Question 3.
+\begin{sol}
+	Denote $y_{it}$ as the observed response, where $i = 1, 2, 3, 4$. Here the number of treatment factors is $v = 4$. Also $t = 1, 2, \ldots, r_i$, where $r_i$ is the number of observations in treatment $i$. So $r_1 = 7, r_2 = 8, r_3 = 6, r_4 = 8$, and the total number of observations across different treatment group is $n = \sum_{i}r_i = 29$.\vskip 2mm
+	So For $(a)$:\vskip 2mm
+	The overall mean is:
+	\begin{align*}
+		\bar{y}_{..} = \frac{1}{n}\sum_{i}\sum_ty_{it}
+	\end{align*}
+	Please see R code line $1-24$ to read in the data as the form we need, and code line $28-29$ to get the overall mean $\bar{y_{..}} = 3.718276$.\vskip 2mm
+	Please see R code line $31-32$ to get the treatment mean:
+	\begin{align*}
+		\bar{y}_{1.} &= 3.745714\\
+		\bar{y}_{2.} &= 3.580000\\
+		\bar{y}_{3.} &= 3.598333\\
+		\bar{y}_{4.} &= 3.922500 
+	\end{align*}
+	Finally the treatment effects are the treatment mean minus the overall mean. See R code line $34-35$:
+	\begin{align*}
+		&\text{Treatment1 effect}: 0.02743842\\
+		&\text{Treatment2 effect}: -0.13827586\\
+		&\text{Treatment3 effect}: -0.11994253\\
+		&\text{Treamtnet4 effect}: 0.20422414
+	\end{align*}
+	For part (b):\vskip 2mm
+	The general anova table assumes the following format:
+	\begin{align*}
+		\begin{tabular}{c|c|c|c|c|c}
+			\hline
+			\hline
+			\text{Source} & \text{DF} & \text{SS} & \text{MS}& \text{F}& \text{p}\\
+			\hline
+			\text{Treatments} & $v - 1$ & \text{ssT} & $\text{msT} = \frac{\text{ssT}}{v - 1}$ & $\frac{\text{msT}}{\text{msE}}$ & \\
+			\hline
+			\text{Error} & $n - v$ & \text{ssE} & $\text{msE} = \frac{\text{ssE}}{n - v}$ &  &\\
+			\hline
+			\text{Total} & $n - 1$ &\text{sstot} & &&
+		\end{tabular}
+	\end{align*}
+	In particular, we have:
+	\begin{align*}
+		ssE &= \sum_{i}\sum_t y^2_{it} - \sum_{i}r_i\bar{y}^2_{i.}\\
+		sstot &= \sum_{i}\sum_t y^2_{it} - n\bar{y}^2_{..}\\ 
+		ssT &=  \sum_i r_i\bar{y}^2_{i.} - n\bar{y}^2_{..}
+	\end{align*}
+	See R code line $37-39$, we got:
+	\begin{center}
+		\includegraphics[width = 10cm]{hw1q3anova.jpg}
+	\end{center}
+	The $\text{ind}$ row gives us the treament row for ANOVA table, and the $\text{Residuals}$ row gives us Error row for ANOVA table. And we only need to add on column $DF$ and $SS$ to get the total row for ANOVA table. So the final ANOVA table is:
+	\begin{align*}
+		\begin{tabular}{c|c|c|c|c|c}
+		\hline
+			\hline
+			\text{Source} & \text{DF} & \text{SS} & \text{MS}& \text{F}& \text{p}\\
+			\hline
+			\text{Treatments} & $3$ & $0.57821$ & $0.192736$ & $4.6581$ & 0.01016\\
+			\hline
+			\text{Error} & $25$ & $1.03440$ & $0.041376$ &  &\\
+			\hline
+			\text{Total} & $28$ &$1.61261$ & &&
+		\end{tabular}
+	\end{align*}
+	Since the p value is reasonably small ($<0.05$), we conclude that the four diets do make a difference on the liver weight as a percentage of the body weight.
+\end{sol}
+Question 4.\vskip 2mm
+\begin{sol}
+	For part $(a)$, to show $S_i^2$ is an unbiased estimator of $\sigma^2$, only need to show that $E[S_i^2] = \sigma^2$. See the following work:
+	\begin{align*}
+		E[S_i^2]&= E\Big[\frac{1}{n_i- 1}\sum_j\Big(Y_{ij} - \bar{Y}^2_{i\cdot}\Big)^2\Big]\\
+		&= \frac{1}{n_i - 1}\sum_j E\Big[Y_{ij}^2 - 2Y_{ij}\cdot \bar{Y}_{i\cdot} + \bar{Y}^2_{i\cdot}\Big]\\
+		&= \frac{1}{n_i - 1}\Big\{\sum_j \underbrace{E[Y_{ij}^2]}_{ = \sigma^2} - \sum_j \frac{2}{n_i}\Big(\sum_k E\Big[Y_{ij}Y_{ik}\Big]\Big) + n_i \underbrace{E\Big[\bar{Y}^2_{i\cdot}\Big]}_{ = \sigma^2/n_i}\Big\}
+	\end{align*}
+	Notice that due to the independence and normality assumption, we have:
+	\begin{align*}
+		E\Big[Y_{ij}Y_{ik}\Big] &= E\Big[Y_{ij}\Big]\cdot E\Big[Y_{ik}\Big] = 0 \text{ if }j \neq k\\
+		E\Big[Y_{ij}Y_{ik}\Big] & = E\Big[Y^2_{ij}\Big] = \sigma^2 \text{ if }j = k
+ 	\end{align*}
+ 	So continue from above we have:
+ 	\begin{align*}
+ 		E[S_i^2] &= \frac{1}{n_i - 1}\Big\{ \sum_j \sigma^2 - \sum_j\frac{2}{n_i}\sigma^2 + n_i \cdot \frac{\sigma^2}{n_i}\Big\}\\
+ 		&= \frac{1}{n_i - 1}\Big\{n_i\sigma^2 - n_i\cdot \frac{2}{n_i}\sigma^2 + \sigma^2\Big\}\\
+ 		&= \frac{1}{n_i - 1}\cdot (n_i - 1)\cdot \sigma^2\\
+ 		&= \sigma^2
+ 	\end{align*}
+ 	Thus finished the proof.\vskip 2mm
+ 	For part $(b)$:\vskip 2mm
+ 	We can use the result from part $(a)$:
+ 	\begin{align*}
+ 		E\Big[SSE_F\Big] &= E\Big[\sum_i(n_i - 1)S^2_i\Big]\\
+ 		&= \sum_i(n_i - 1)E\Big[S_i^2\Big]\\
+ 		&= \sum_i(n_i - 1)\sigma^2\\
+ 		&= \sigma^2\sum_i (n_i - 1)\\
+ 		&= (n - g)\sigma^2
+ 	\end{align*}
+ 	Here $n = \sum_i n_i$ and we were given $i = 1, 2, \ldots, g$.
+\end{sol}
+Question 5.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	Notice that the error sum of square for the reduced model is:
+	\begin{align*}
+		\text{SSE}_0 &= \sum_i\sum_j\Big(Y_{ij} - \hat{\mu}\Big)^2
+	\end{align*}
+	So in order to get the least sum of square error, we take derivative on $\hat{\mu}$ and set it to $0$:
+	\begin{align*}
+		\frac{\partial}{\partial \mu}\text{SSE}_0 &= -\sum_i\sum_j2\Big(Y_{ij} -\hat{\mu}\Big) = 0\\
+		\Longrightarrow \sum_i\sum_j\Big(Y_{ij} - \hat{\mu}\Big) &= 0\\
+		\Longrightarrow \sum_i\sum_jY_{ij} - \sum_i\sum_j \hat{\mu} &= 0\\
+		\Longrightarrow \sum_i\sum_jY_{ij} &= n\hat{\mu}\\
+		\Longrightarrow \hat{\mu} = \frac{1}{n}\sum_i\sum_jY_{ij} &= \bar{Y}_{\cdot\cdot}
+	\end{align*}
+	For part $(b)$:\vskip 2mm
+	Follow the hint let's first compute $E\Big[\text{SSE}_0\Big]$:
+	\begin{align*}
+		E\Big[\text{SSE}_0\Big] &= E \Big[\sum_i\sum_j\Big(Y_{ij} - \bar{Y}_{\cdot\cdot}\Big)\Big]^2\\
+		&= \sum_i\sum_j\Big[E\Big(Y_{ij}^2\Big) - 2E\Big(Y_{ij}\bar{Y}_{\cdot\cdot}\Big) + E\Big(\bar{Y}^2_{\cdot\cdot}\Big)\Big]\\
+		&= \sum_i\sum_j \Big[\sigma^2 - \frac{2}{n}E\Big[Y_{ij}\sum_k\sum_l Y_{kl}\Big] + \frac{\sigma^2}{n}\Big]
+	\end{align*}
+	Notice that due to the independence and nomrality of $Y_{ij}$, we have:
+	\begin{align*}
+		E\Big[Y_{ij}Y_{kl}\Big] &= E[Y_{ij}]E[Y_{kl}] = 0 \text{ if }(i, j) \neq (k, l)\\
+		E\Big[Y_{ij}Y_{kl}\Big] &= E[Y^2_{ij}] = \sigma^2 \text{ if }(i, j) = (k, l)
+	\end{align*}
+	So continue from above, we have:
+	\begin{align*}
+		E\Big[\text{SSE}_0\Big] &= \sum_i\sum_j\Big[\sigma^2 - \frac{2\sigma^2}{n} + \frac{\sigma^2}{n}\Big]\\
+		&= \sum_i\sum_j\frac{n - 1}{n}\sigma^2\\
+		&= (n - 1)\sigma^2
+	\end{align*}
+	Hence $\frac{1}{n - 1}SSE_0 = \frac{1}{n - 1}\sum_i\sum_j\Big(Y_{ij} - \bar{Y}_{\cdot\cdot}\Big)^2$ would be an unbiased estimator for $\sigma^2$
+\end{sol}
+Question 6.
+\begin{sol}
+	Notice the simple fact that for any column vector $a = (a_1, a_2, \ldots, a_n)^{T}$, we have:
+	\begin{align*}
+		a^T J a &= \Big(\sum_{i = 1}^n a_i\Big)^2\\
+		a^T I a &= \sum_{i = 1}^n a_i^2
+	\end{align*}
+	where $J$ is an $n \times n$ matrix whose every entry is $1$, and $I$ is an $n\times n$ identity matrix. \vskip 2mm
+	Now let's first look at $\text{SSTOT}$:
+	\begin{align*}
+		\text{SSTOT} &= \sum\sum\Big(Y_{ij} - \bar{Y}_{\cdot\cdot}\Big)^2\\
+		&= \sum\sum\Big(Y^2_{ij} - 2Y_{ij}\bar{Y}_{\cdot\cdot} + \bar{Y}^2_{\cdot\cdot}\Big)\\
+		&= \sum\sum Y^2_{ij} - 2\bar{Y}_{\cdot\cdot}\sum\sum Y_{ij} + \sum\sum\bar{Y}^2_{\cdot\cdot}\\
+		&= \sum\sum Y^2_{ij} - \frac{2}{N} \Big(\sum\sum Y_{ij}\Big)^2 + \frac{1}{N}\Big(\sum\sum Y_{ij}\Big)^2\\
+		&= \sum\sum Y^2_{ij} - \frac{1}{N}\Big(\sum\sum Y_{ij}\Big)^2\\
+		&= Y^T I Y -  \frac{1}{N}Y^T J Y\\
+		&= Y^T\Big(I - \frac{1}{N}J\Big)Y
+	\end{align*}
+	Here $I$ is an $N \times N$ identity matrix and $J$ is an $N\times N$ matrix all those entries are $1$. Also $Y = \Big(Y_{11}, \ldots, Y_{1n_1}, \ldots, Y_{g1}, \ldots, Y_{gn_g}\Big)^T$ is a column vector whose length is $\sum_{i = 1}^g \sum_{j = 1}^{n_i}1 = N$.\vskip 2mm
+	Similarly, for error sum of square:
+	\begin{align*}
+		\text{SSE} &= \sum\sum\Big(Y_{ij} - \bar{Y}_{i\cdot}\Big)^2\\
+		                &=  \sum\sum\Big( Y^2_{ij} - 2Y_{ij}\bar{Y}_{i\cdot} + \bar{Y}^2_{i\cdot }\Big)\\
+		                &= \sum\sum Y^2_{ij} - 2\sum\sum Y_{ij}\bar{Y}_{i\cdot} + \sum\sum\bar{Y}^2_{i}\\
+		                &= \sum\sum Y^2_{ij} - 2\sum \bar{Y}_{i\cdot}\Big(\sum Y_{ij}\Big) + \sum n_i\bar{Y}^2_{i\cdot}\\
+		                &= \sum\sum Y^2_{ij} - 2\sum \frac{1}{n_i} \Big(\sum Y_{ij}\Big)^2 + \sum \frac{1}{n_i}\Big(\sum Y_{ij}\Big)^2\\
+		                &= \sum\sum Y^2_{ij} - \sum\frac{1}{n_i}\Big(\sum Y_{ij}\Big)^2\\
+		                &= Y^T I Y - \sum \frac{1}{n_i}Y_i^T J_{n_i} Y_i \text{ (I will explain the notation below)}\\
+		                &= Y^T I Y - Y^T \Big[\begin{array}{ccc} \frac{1}{n_1}Y_{n_1}^T J_{n_1}Y_{n_1}& &  \\   & \ddots &  \\  & &\frac{1}{n_g}Y_{n_g}^TJ_{n_g}Y_{n_g} \end{array}\Big] Y\\
+		                &= Y^T I Y - Y^T H Y\\
+		                & = Y^T\Big(I - H\Big)Y
+	\end{align*}
+	Here
+	\begin{align*}
+		H = \Big[\begin{array}{ccc} \frac{1}{n_1}Y_{n_1}^T J_{n_1}Y_{n_1}&\cdots& \cdots\\  \vdots & \ddots & \vdots \\ \cdots &\cdots&\frac{1}{n_g}Y_{n_g}^TJ_{n_g}Y_{n_g} \end{array}\Big]
+	\end{align*}
+	Also, $Y_{n_i} = \Big(Y_{i1}, Y_{i2}, \ldots, Y_{in_i}\Big)^T$ is a column vector indicating the $i-$th treatment with $n_i$ observations. $J_{n_i}$ is an $n_i \times n_i$ matrix all whose entries are $1$.\vskip 2mm
+	Finally for $\text{SST}$, it is well know that
+	\begin{align*}
+		\text{SST} &= \text{SSTOT} - \text{SSE}\\
+		&= Y^T\Big(I -\frac{1}{N}J\Big)Y - Y^T\Big(I - H\Big)Y\\
+		&= Y^T\Big(I - \frac{1}{N}J - I + H\Big)Y\\
+		&= Y^T\Big(H - \frac{1}{N}J\Big)Y
+	\end{align*}
+	Thus finished the proof.
+\end{sol}
+Question $7$.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	Since $Y_{ij}'s$ are independent and normal, we know that each $\bar{Y}_{i\cdot}$ is normal for any $i = 1, 2, \ldots, g$. Meanwhile $\bar{Y}_{i\cdot}, i = 1, 2, \ldots, g$ are independent.\vskip 2mm
+	We have:
+	\begin{align*}
+		E\Big[\bar{Y}_{i\cdot}\Big] &= \frac{1}{n_i} \sum_{i = 1}^{n_i}E\Big[Y_{ij}\Big]\\
+							&= \frac{1}{n_i}\sum_{i = 1}^{n_i}\mu_i\\
+							&= \frac{1}{n_i}\cdot n_i \mu_i\\
+							&= \mu_i\\
+							\text{Var}\Big[\bar{Y}_{i\cdot}\Big] &= \frac{n_i \sigma^2}{n_i^2} = \frac{\sigma^2}{n_i}
+	\end{align*}
+	So $\bar{Y}_{i\cdot} \sim N\Big(\mu_i, \frac{\sigma^2}{n_i}\Big)$.\vskip 2mm
+	Due to the independence among $\bar{Y}_{i\cdot}$, we know that $\sum c_i\bar{Y}_{i\cdot}$ is also normal. We have:
+	\begin{align*}
+		E\Big[\sum c_i\bar{Y}_{i\cdot}\Big] &= \sum c_i E\Big[\bar{Y}_{i\cdot}\Big] = \sum c_i\mu_i\\
+		\text{Var}\Big[\sum c_i \bar{Y}_{i\cdot}\Big] &= \sum c^2_{i}\text{Var}\Big[\bar{Y}_{i\cdot}\Big] = \sum c^2_i\cdot \frac{\sigma^2}{n_i} =\sigma^2 \sum \frac{c^2_i}{n_i}
+	\end{align*}
+	So
+	\begin{align*}
+		\sum c_i\bar{Y}_{i\cdot }\sim N\Big(\sum c_i\mu_i, \sigma^2 \sum \frac{c^2_i}{n_i}\Big)
+	\end{align*}
+	and hence
+	\begin{align*}
+		X = \frac{\sum c_i\bar{Y}_{i\cdot} - \sum c_i\mu_i}{\sqrt{\sigma^2\sum c^2_i/n_i}}\sim N\Big(0, 1\Big)
+	\end{align*}
+	For part $(b)$:\vskip 2mm
+	Within each treatment group $i, 1 \leq i \leq g$, we notice that:
+	\begin{align*}
+		\sum_{j = 1}^{n_i}\frac{\Big(Y_{ij} - \bar{Y}_{i\cdot}\Big)^2}{\sigma^2} &= \frac{(n_i - 1)\cdot \frac{1}{n_i - 1}\sum_{j = 1}^{n_i}\Big(Y_{ij} - \bar{Y}_{i\cdot}\Big)^2}{\sigma^2} = \frac{(n_i - 1)S^2_i}{\sigma^2} \sim \chi^2_{n_i - 1}
+	\end{align*}
+	where $S^2_i$ is the sample variance of treatment group $i$.\vskip 2mm
+	Notice that across the groups $\sum_{j = 1}^{n_i}\frac{\Big(Y_{ij} - \bar{Y}_{i\cdot}\Big)^2}{\sigma^2}$ are independent due to the model assumption, so 
+	\begin{align*}
+		\frac{\text{ SSE }}{\sigma^2} = \sum_{i = 1}^g\sum_{j = 1}^{n_i}\frac{\Big(Y_{ij} - \bar{Y}_{i\cdot}\Big)^2}{\sigma^2} = \sum_{i = 1}^{g}\frac{(n_i - 1)S^2_i}{\sigma^2} \sim \chi^2_{\sum_{i = 1}^g(n_i - 1)} = \chi^2_{n - g}
+	\end{align*}
+\end{sol}
+Question $8.$
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	Let's first compute the varaince of $\bar{X}$:\vskip 2mm
+	Under null hypothesis and assumption of the model:
+	\begin{align*}
+		\text{Var}(\bar{X}) &= E\Big[\Big(\bar{X}\Big)^2\Big] = \frac{1}{n^2}E\Big[\Big(\sum       X_i\Big)^2\Big]\\
+		&= \frac{1}{n^2}\Big(E\Big[\sum X_i^2\Big] + E\Big(\sum_{k = 1}^{n - 1}\sum_{|i = j| = k}E\Big(X_iX_j\Big)\Big)\Big)\\
+		&= \frac{1}{n^2}\Big(n\sigma^2 + \sum_{k = 1}^{n - 1}\sum_{|i - j| = k}\sigma^2\cdot \rho^k\Big)
+	\end{align*}
+	The last step is due to: when $|i - j|= k$, 
+	\begin{align*}
+		\rho^k &= \frac{\text{Cov}(X_i, X_j)}{\sqrt{\text{Var}(X_i)}\sqrt{\text{Var}(X_j)}}\\
+		&= \frac{E(X_iX_j) - \cancel{E(X_i)E(X_j)}}{\sigma^2}
+	\end{align*}
+	So
+	\begin{align*}
+		E(X_iX_j) = \sigma^2\rho^{k}
+	\end{align*}
+	Notice that for each case $|i - j| = k$, there are $2$ terms satisfy this for same pair of $(i, j)$. There are also $n - k$ pairs of different $(i, j)$ such that $|i - j| = k$. So continue from above, we have:
+	\begin{align*}
+		\text{Var}(\bar{X}) &= \frac{1}{n^2}\Big(n\sigma^2 + 2\sum_{k = 1}^{n- 1}\sigma^2\rho^k(n - k)\Big)\\
+		&= \frac{1}{n^2}\Big[n\sigma^2 + 2\sigma^2\sum_{k = 1}^{n - 1}(n - k)\rho^k\Big]\\
+		&= \frac{1}{n^2}\Big[n\sigma^2 + 2\sigma^2n\sum_{k = 1}^{n - 1}\rho^k - 2\sigma^2\sum_{k = 1}^{n - 1}k\rho^k\Big]\\
+		&= \frac{1}{n^2}\Big[n\sigma^2 + 2n\sigma^2\cdot \frac{\rho - \rho^n}{1 - \rho} - 2\sigma^2\rho\sum_{k = 1}^{n - 1}k\cdot\rho^{k - 1}\Big]\\
+		&= \frac{1}{n^2}\Big[n\sigma^2 + 2n\sigma^2\cdot \frac{\rho - \rho^n}{1 - \rho} - 2\sigma^2\rho\cdot \Big(\sum_{k = 1}^{n - 1}\rho^k\Big)'\Big]\\
+		&= \frac{1}{n^2}\Big[n\sigma^2 + 2n\sigma^2\cdot \frac{\rho - \rho^n}{1 - \rho} - 2\sigma^2\rho\cdot \frac{(1 - n\rho^{n - 1})(1 - \rho) + (\rho - \rho^n)}{(1 - \rho)^2}\Big]
+	\end{align*}
+	Continue from above, we got:
+	\begin{align*}
+		\text{Var}(\bar{X}) &= \frac{\sigma^2}{n}\Big[\frac{(1 - \rho)^2 + 2(\rho - \rho^n)(1 - \rho) - \frac{2}{n}\rho\Big(1 - \cancel{\rho} - n\rho^{n - 1} + n\rho^n + \cancel{\rho} - \rho^n\Big)}{(1 - \rho)^2}\Big]\\
+		&= \frac{\sigma^2}{n}\cdot \frac{1 - \cancel{2\rho} + \rho^2 + \cancel{2\rho} - 2\rho^2 - \cancel{2\rho^n} + \cancel{2\rho^{n + 1}} - \frac{2}{n}\rho + \cancel{2\rho^n} - \cancel{2\rho^{n + 1}} + \frac{2}{n}\rho^{n + 1}}{(1 - \rho)^2}\\
+		&= \frac{\sigma^2}{n}\cdot \frac{1 - \rho^2- \frac{2}{n}\rho + \frac{2}{n}\rho^{n + 1}}{(1 - \rho)^2}
+	\end{align*}
+	When $n$ is large enough, we could give up the two terms $\frac{2}{n}\rho$ and $\frac{2}{n}\rho^{n + 1}$, so 
+	\begin{align*}
+		\text{Var}(\bar{X}) \simeq \frac{\sigma^2}{n}\cdot \frac{1 - \rho^2}{(1 - \rho)^2} = \frac{\sigma^2(1 + \rho)}{n(1 - \rho)}
+	\end{align*}
+	take square root, we have:
+	\begin{align*}
+		\sigma(\bar{X}) \simeq \sqrt{\frac{1 + \rho}{1 - \rho}}\cdot \frac{\sigma}{\sqrt{n}}
+	\end{align*}
+	For part $(b)$:\vskip 2mm
+	If we use one sample $t- test$, then our statistic would be:
+	\begin{align*}
+		t = \frac{\bar{X}}{\frac{s}{\sqrt{n}}\cdot \sqrt{\frac{1 + \rho}{1 - \rho}}}
+	\end{align*}
+	When $\rho > 0$, we have $\frac{1 + \rho}{1 - \rho} > 1$, thus we got smaller absolute value for our t-statistic, which means our $p$ value is larger, and we reject less. Thus the chance of making Type I error (falsely reject) will be smaller.\vskip 2mm
+	For part $(c)$:\vskip 2mm
+	Similar to $(b)$ except this is the oppositve case. When $\rho < 0$, $\frac{1 + \rho}{1 - \rho} < 1$, so our $t$ statistic has larger absolute value, hence we got smaller $p$ value and reject more often, hence increase the chance of making type I error.
+\end{sol}
+Question 9.
+\begin{sol}
+	The code is attached as HW1Q9.R. I am going to explain the process of the code here:\vskip 2mm
+	\begin{enumerate}
+		\item with each given $\rho$, we sample $1000$ times from $N(0, 25)$, each sample is of size $10,000$. We have to be careful here because within each sample, the sample points are not independent. We use an AR$(1)$ time series model to simulate our data.
+		\item run one sample t-test(with modifided statistic involving $\rho$) on all $1000$ sample sets for each $\rho$ value. Since we have prior knowledge that it is sampled from $N(0, 25)$, so the null hypothesis $\mu = 0$ should be true. Thus any rejection would be recorded as a type I error. We record the type I error rate under each given value $\rho$. 
+		\item compare our results with our theoretical expectation from Question 8.
+	\end{enumerate}\vskip 2mm
+	Also, we need to write our own one sample t-test function, because the default t-test given by $R$ is only working for independent samples.\vskip 2mm
+	After we run the code, we got the following results:
+	\begin{align*}
+		\begin{tabular}{c|c|c}
+		\hline
+		$\rho$ &$\sqrt{\frac{1 + \rho}{1 - \rho}}$& Type I error\\
+		\hline
+		-0.50&0.58& 0.045\\
+		-0.25&0.77&0.055\\
+		-0.10&0.90&0.053\\
+		0.00&1.00&0.052\\
+		0.10&1.11&0.045\\
+		0.25&1.29&0.039\\
+		0.50&1.73&0.046
+		\end{tabular}
+	\end{align*}
+	It is clear to see that from $\rho[2]$ to $\rho[6]$ as the value of $\rho$ increase from negative to positive, the type I error rate decrease, which match with conclusion from Question 8. However $\rho[1]$ and $\rho[7]$ behaves abnormaly. I think my code is somewhere problamatic still, because even I can run though it, I will always get warning. Need to further check on this.
+\end{sol}
+\end{document}
