@@ -1,0 +1,175 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW4}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch $9.$ Question $2$.
+\begin{sol}
+For part $(a)$:\vskip 2mm
+\begin{align*}
+	E[Y_{it}] &= E\Big[\mu + \tau_i + \beta(x_{it} - \bar{x}_{\cdot\cdot}) + \epsilon_{it}\Big]\\
+	&= \mu + \tau_i + \beta(x_{it} - \bar{x}_{\cdot\cdot})
+\end{align*}
+\vskip 2mm
+For part $(b)$:\vskip 2mm
+we have:
+\begin{align*}
+	\text{sp}^{\ast}_{xY} &= \sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})(Y_{it} - \bar{Y}_{i\cdot})\\
+	&= \sum_i\sum_t\Big[(x_{it} - \bar{x}_{i\cdot})Y_{it} - (x_{it} - \bar{x}_{i\cdot})\bar{Y}_{i\cdot}\Big]\\
+	&= \sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})Y_{it} - \sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})\bar{Y}_{i\cdot}
+\end{align*}
+Notice that
+\begin{align*}
+	\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})\bar{Y}_{i\cdot} = \sum_i\bar{Y}_{i\cdot}\sum_t(x_{it} - \bar{x}_{i\cdot}) = \sum_i\bar{Y}_{i\cdot}\cancel{(r_i\bar{x}_{i\cdot} - r_i\bar{x}_{i\cdot})}  =0
+\end{align*}
+So we have
+\begin{align*}
+	\text{sp}^{\ast}_{xY} = \sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})Y_{it}
+\end{align*}
+For part $(c)$:\vskip 2mm
+we have:
+\begin{align*}
+	E[\hat{\beta}]&= E\Big[\frac{\text{sp}^{\ast}_{xY}}{\text{sp}^{\ast}_{xx}}\Big]
+	= \frac{1}{\text{sp}^{\ast}_{xx}}E[\text{sp}^{\ast}_{xY}] = \frac{E\Big[\sum_i\sum_t (x_{it} - \bar{x}_{i\cdot})Y_{it}\Big]}{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2}\\
+	&= \frac{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})E[Y_{it}]}{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2}
+	= \frac{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})\Big[\mu+ \tau_i + \beta(x_{it} - \bar{x}_{\cdot\cdot})\Big]}{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2}\\
+	&= \frac{\mu\cancel{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})} + \sum_i\tau_i\cancel{\sum_t(x_{it} - \bar{x}_{i\cdot})} + \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})(x_{it} - \bar{x}_{\cdot\cdot})}{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2}
+\end{align*}
+Notice that for the remaining term on the numerator, we have:
+\begin{align*}
+	 &\ \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})(x_{it} - \bar{x}_{\cdot\cdot}) = \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})\Big[(x_{it} - \bar{x}_{i\cdot})+(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})\Big]\\
+	 &= \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2 + \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})\\
+	 &= \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2 + \beta\sum_i(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})\cancel{\sum_t(x_{it} - \bar{x}_{i\cdot})}\\
+	 &= \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2
+\end{align*}
+So we have
+\begin{align*}
+	E[\hat{\beta}] = \frac{\beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2}{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2} = \beta
+\end{align*}
+\vskip 2mm
+For part $(d)$:\vskip 2mm
+We have:
+\begin{align*}
+	\text{Var}(\hat{\beta}) &= E[\hat{\beta}^2] - \beta^2 = \frac{1}{(\text{ss}^{\ast}_{xx})^2}E\Big[\Big(\text{sp}_{xY}^{\ast}\Big)^2\Big] - \beta^2
+\end{align*}
+Notice that:
+\begin{align*}
+	E\Big[\Big(\text{sp}_{xY}^{\ast}\Big)^2\Big] &= E\Big[\Big(\sum_i\sum_t(x_{it}  - \bar{x}_{i\cdot})Y_{it}\Big)^2\Big] \\ &=\text{Var}\Big(\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})Y_{it}\Big) + \Big(E\Big[\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})Y_{it}\Big]\Big)^2\\
+	&= \sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2\text{Var}(Y_{it}) + \Big(\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})E[Y_{it}]\Big)^2\\
+	&= \sigma^2\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2 + \Big(\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})(\mu + \tau_i + \beta(x_{it} - \bar{x}_{\cdot\cdot}))\Big)^2\\
+	&= \sigma^2\text{ss}^{\ast}_{xx} + \Big[\mu\cancel{\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})} + \sum_i\tau_i\cancel{\sum_t(x_{it} - \bar{x}_{i\cdot})} + \beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})(x_{it} - \bar{x}_{\cdot\cdot})\Big]^2\\
+	&= \sigma^2\text{ss}^{\ast}_{xx} + \Big[\beta\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})\Big((x_{it} - \bar{x}_{i\cdot}) + (\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})\Big)\Big]^2\\
+	&= \sigma^2\text{ss}^{\ast}_{xx} + \beta^2\Big[\sum_i\sum_t(x_{it} - \bar{x}_{i\cdot})^2 + \sum_i(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})\cancel{\sum_t(x_{it} - \bar{x}_{i\cdot})}\Big]^2\\
+	&=  \sigma^2\text{ss}^{\ast}_{xx} + \beta^2(\text{ss}^{\ast}_{xx})^2
+\end{align*}
+So we have:
+\begin{align*}
+	\text{Var}(\hat{\beta}) &= \frac{1}{(\text{ss}^{\ast}_{xx})^2}\Big(\sigma^2\text{ss}^{\ast}_{xx} + \beta^2(\text{ss}^{\ast}_{xx})^2\Big) - \beta^2\\
+	&= \frac{\sigma^2}{\text{ss}^{\ast}_{xx}} + \beta^2 - \beta^2\\
+	&= \frac{\sigma^2}{\text{ss}^{\ast}_{xx}}
+\end{align*}
+\vskip 2mm
+On the other hand,
+\begin{align*}
+	\text{Cov}\Big(\bar{Y}_{i\cdot}, \hat{\beta}\Big) &= \frac{\text{Var}\Big(\bar{Y}_{i\cdot}  + \hat{\beta}\Big)- \text{Var}(\bar{Y}_{i\cdot}) - \text{Var}(\hat{\beta})}{2}
+\end{align*}
+We have:
+\begin{align*}
+	\text{Var}(\hat{\beta}) = \frac{\sigma^2}{\text{ss}^{\ast}_{xx}}
+\end{align*}
+and
+\begin{align*}
+	\text{Var}(\bar{Y}_{i\cdot}) &= \text{Var}\Big(\frac{1}{r_i}\sum_{t = 1}^{r_i}Y_{it}\Big) = \frac{r_i\sigma^2}{r_i^2} = \frac{\sigma^2}{r_i}
+\end{align*}
+also
+\begin{align*}
+	\text{Var}\Big(\bar{Y}_{i\cdot} + \hat{\beta}\Big) &= \text{Var}\Big(\bar{Y}_{i\cdot} + \frac{\sum_t(x_{it} - \bar{x}_{i\cdot})Y_{it}}{\text{ss}^{\ast}_{xx}} + \frac{\sum_{i'\neq i}\sum_t(x_{i't} - \bar{x}_{i'\cdot})Y_{i't}}{\text{ss}^{\ast}_{xx}}\Big)\\
+	&= \text{Var}\Big(\bar{Y}_{i\cdot} +  \frac{\sum_t(x_{it} - \bar{x}_{i\cdot})Y_{it}}{\text{ss}^{\ast}_{xx}}\Big) + \text{Var}\Big(\frac{\sum_{i'\neq i}\sum_t(x_{i't} - \bar{x}_{i'\cdot})Y_{i't}}{\text{ss}^{\ast}_{xx}}\Big)\\
+	&= \text{Var}\Big(\sum_{t = 1}^{r_i}(\frac{1}{r_i} + \frac{x_{it} - \bar{x}_{i\cdot}}{\text{ss}^{\ast}_{xx}})Y_{it}\Big) + \sigma^2\cdot \frac{\sum_{i'\neq i}\sum_t(x_{i't} - \bar{x}_{i'\cdot})^2}{(\text{ss}^{\ast}_{xx})^2}\\
+	&= \sigma^2\sum_{t = 1}^{r_i}\Big(\frac{1}{r_i^2} + \frac{(x_{it} - \bar{x}_{i\cdot})^2}{(\text{ss}^{\ast}_{xx})^2} + \frac{2}{r_i}\cdot\frac{x_{it} - \bar{x}_{i\cdot}}{\text{ss}^{\ast}_{xx}}\Big) + \sigma^2\cdot \frac{\sum_{i'\neq i}\sum_t(x_{i't} - \bar{x}_{i'\cdot})^2}{(\text{ss}^{\ast}_{xx})^2}\\
+	&= \sigma^2\Big[\frac{1}{r_i} + \frac{\text{ss}^{\ast}_{xx}}{(\text{ss}^{\ast}_{xx})^2} + 0\Big] = \frac{\sigma^2}{r_i} + \frac{\sigma^2}{\text{ss}^{\ast}_{xx}}
+\end{align*}
+So we have
+\begin{align*}
+	\text{Var}\Big(\bar{Y}_{i\cdot}  + \hat{\beta}\Big)- \text{Var}(\bar{Y}_{i\cdot}) - \text{Var}(\hat{\beta}) = \frac{\sigma^2}{r_i} + \frac{\sigma^2}{\text{ss}^{\ast}_{xx}} - \frac{\sigma^2}{r_i} - \frac{\sigma^2}{\text{ss}^{\ast}_{xx}} = 0
+\end{align*}
+hence
+\begin{align*}
+	\text{Cov}(\bar{Y}_{i\cdot}, \hat{\beta}) = 0
+\end{align*}
+\vskip 2mm
+For part $(e)$:\vskip 2mm
+we have:
+\begin{align*}
+	E[\hat{\mu} + \hat{\tau}_i] &= E\Big[\bar{Y}_{i\cdot} - \hat{\beta}(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})\Big]\\
+	&= E[\bar{Y}_{i\cdot}] - (\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})E[\hat{\beta}]\\
+	&= \mu + \tau_i + \beta(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot}) - \beta(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})\\
+	&= \mu + \tau_i
+\end{align*}
+\vskip 2mm
+For part $(f)$:\vskip 2mm
+Being estimable means we can write the estimate as function of the sample. Here we already know
+\begin{align*}
+	\hat{\beta} = \frac{\text{sp}^{\ast}_{xx}}{\text{ss}^{\ast}_{xx}}
+\end{align*}
+so $\beta$ is estimable. Also notice
+\begin{align*}
+	\hat{\mu} + \hat{\tau}_i = \bar{Y}_{i\cdot} - \hat{\beta}(\bar{x}_{i\cdot} - \bar{x}_{\cdot\cdot})
+\end{align*}
+so $\mu + \tau_i$ is also estimable, as well as the linear combination of $\mu + \tau_i$ and $\beta$.
+\end{sol}
+\end{document}

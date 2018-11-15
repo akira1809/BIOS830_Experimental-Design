@@ -1,0 +1,154 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+% \usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW4}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Chapter $10$ Question $4$.
+\begin{sol}
+we copy the data into a .csv file and read it:
+<<tidy = FALSE>>=
+  #read the data
+  setwd("C:\\Akira\\R")
+  resp = read.csv("resp.csv", header = TRUE)
+@
+For part $(a)$:\vskip 2mm
+Our model here is the randomized complete block design:
+\begin{align*}
+  Y_{hi} = \mu + \theta_h + \tau_i + \epsilon_{hi}
+\end{align*}
+with $h = 1, \ldots, 9; i = 1, 2, 3$.\vskip 2mm
+The model assumption is $\epsilon_{hi} \sim N(0, \sigma^2)$ i.i.d.\vskip 2mm
+We fit the data into the model:
+<<tidy=FALSE>>=
+fit <- lm(ratio~ factor(subject) + factor(prot), data=resp)
+#anova(fit)
+SSE <- sum((resp$ratio - fit$fitted.values)^2)
+Z = fit$residuals/sqrt(SSE/26)
+@
+To evaluate the assumptions for the block-tratment model above, we give following plots:
+<<tidy = FALSE, fig.width=5, fig.height = 3>>=
+#par(mfrow = c(2, 2))
+library(ggplot2)
+ggplot(data=resp, aes(x=factor(prot), y = ratio, color = subject))+
+  geom_line(aes(group=subject), linetype = "dotted") +geom_point()
+@
+<<tidy = FALSE, out.width = '5in'>>=
+par(mfrow = c(2, 1))
+cols = factor(resp$subject)
+plot(fit$fitted.values, Z, col=as.character(cols))
+title(main = "std residuals vs predicted values")
+text(fit$fitted.values, Z, labels=resp$subject)
+qqnorm(Z, col=as.character(cols))
+@
+From ratio(response) versus protocol(treatment) for each block(subject), since the relationships are not parallel, this indicates a possible interaction between block and treatment factors.\vskip 2mm
+We do not have info for the run order, so we cna not test on independence.\vskip 2mm
+From the standardized residuals against predicted value, we do not see much pattern, this shows support for equal variance. However due to small data here, this judgement may not be really valid.\vskip 2mm
+The qq norm plot or standardized residuals almost forms a straightline, which shows support for normal assumption.\vskip 2mm
+For part $(b)$:\vskip 2mm
+construct the ANOVA table:
+<<tidy = FALSE>>=
+anova(fit)
+@
+The p value for testing equal effects of protocols is $0.78904$ here. If we follow this we will fail to reject $H_0$. But we need to point out that just as example $10.4.1$, a p value this large is unusual. Notice we have a really small ratio of $\text{msT}/\text{msE} = 0.24$, which says the the average variability of measurement from one treatment to another is about four times smaller than the measurement error variability. However the former should include the latter and hence the ratio should be larger than $1$. Also a p value of $0.79$ says that there is only about $21\%$ chance we get a ratio small like this under the null. This raise the doubt of model fitness. Maybe there is interaction between block and treatment. \vskip 2mm
+For part $(c)$:\vskip 2mm
+To evaluate the usefulness of blocking, since it is not randomly assigned to experiment units, so rather than testing the equality of block effects, we only compare the block mean square $\text{ms}\theta$ with the error mean square $\text{msE}$. Our ratio here is $2.7672$, and we consider it large enough to show the usefulness of blocking.\vskip 2mm
+For part $(d)$:\vskip 2mm
+our confidence interval for any contrast under the randomized complete block design is:
+\begin{align*}
+  \sum c_i\tau_i \in \Big(\sum c_i\bar{y}_{\cdot i} \pm w_S\sqrt{\text{msE}\sum c_i^2/b}\Big)
+\end{align*}
+The critical coefficient for Scheffe method is:
+\begin{align*}
+  w_S = \sqrt{(g - 1)F_{g - 1, bg - b - g + 1, \alpha}}
+\end{align*}
+In our case, we have $g = 3, b = 9, \alpha = 0.01$, so
+\begin{align*}
+  w_S = \sqrt{2F_{2, 16, 0.01}} = 3.528806
+\end{align*}
+<<tidy= FALSE>>=
+w_S <- sqrt(2*qf(0.01, 2, 16, lower.tail = FALSE))
+w_S
+@
+we compute the $99\%$ confidence interval as follows:
+<<tidy = FALSE>>=
+a<-c(1, -1, 0)
+b<-c(1, 0, -1)
+c<-c(0, 1, -1)
+d<-c(1, -0.5, -0.5)
+contrast <- list(a, b, c, d)
+n <- length(contrast)
+msE <- anova(fit)[[3]][[3]]
+msE
+y <- c()
+for (i in 1:3){
+y[i] <- mean(resp[resp$prot==i,]$ratio)
+}
+for (i in 1:n){
+#compute least square estimate
+lse <- sum(contrast[[i]]*y)
+#compute msd
+msd <- w_S*sqrt(msE*sum(contrast[[i]]^2)/9)
+#compute lower and upper bound for CI
+ci_lower<- lse-msd
+ci_upper<- lse+msd
+#print the result of CI
+cat("The CI for (", contrast[[i]], ") is (", 
+    ci_lower<- lse-msd, ", ", ci_upper<- lse+msd, ")", "\n")
+}
+@
+\end{sol}
+\end{document}

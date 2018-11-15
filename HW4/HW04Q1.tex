@@ -1,0 +1,123 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW4}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Question $1$.
+\begin{sol}
+For part $(a)$:\vskip 2mm
+We want to derive $\text{Var}(\hat{\beta}_1)$:\vskip 2mm
+Notice that in the simple linear regression model, we have estimate for $\beta_1$ as:
+\begin{align*}
+	\hat{\beta}_1 = \frac{\sum_x\sum_t xy_{xt} - n\bar{x}_{..}\bar{y}_{..}}{ss_{xx}}
+\end{align*}
+So we can compute the variance as follows:
+\begin{align*}
+	\text{Var}(\hat{\beta}_1) &= \text{Var}\Big(\frac{\sum_x\sum_t xy_{xt} - n\bar{x}_{..}\bar{y}_{..}}{ss_{xx}}\Big)  \\
+	&= \frac{1}{(ss_{xx})^2}\Big[\sum_x\sum_t x^2\text{Var}(y_{xt}) + n^2\bar{x}^2_{..}\cdot \text{Var}(\bar{y}_{..}) - 2\sum_x\sum_t nx\bar{x}_{..}\text{Cov}(y_{xt}, \bar{y}_{..})\Big]\\
+	&= \frac{1}{(ss_{xx})^2}\Big[\sum_x\sum_t x^2\sigma^2 + n^2\bar{x}^2_{..}\cdot \frac{1}{n}\sigma^2 - 2\cancel{n}\bar{x}_{..}\sum_x\sum_t x\cdot \cancel{\frac{1}{n}}\sigma^2\Big]\\
+	&= \frac{1}{(ss_{xx})^2}\Big[\sigma^2 \sum_x r_x x^2 + \sigma^2n\bar{x}^2_{..} - 2\sigma^2\bar{x}_{..}\cdot n\bar{x}_{..}\Big] \hskip 3mm (\text{ since }\sum_x\sum_t x = n\bar{x}_{..})\\
+	&= \frac{\sigma^2}{(ss_{xx})^2}\Big[\sum_x r_x x^2 - n\bar{x}^2_{..}\Big]\\
+	&= \frac{\sigma^2}{(ss_{xx})^2}\Big[\sum_x r_x x^2 - \sum_x r_x \bar{x}^2_{..}\Big]\\
+	&=  \frac{\sigma^2}{(ss_{xx})^2}\sum_x r_x(x - \bar{x}_{..})^2
+\end{align*}
+Let's justfiy the last $'='$:\vskip 2mm
+Notice that:
+\begin{align*}
+	2\sum_x r_x x \bar{x}_{..} = 2\bar{x}_{..}\sum_x r_x x = 2\bar{x}_{..} \cdot x_{..}   = 2n\bar{x}^2_{..} = 2\sum_x r_x \bar{x}^2_{..}
+\end{align*}
+So we have:
+\begin{align*}
+	\sum_x r_x x^2 - \sum_x r_x \bar{x}^2_{..} &= \sum_x r_x x^2 - 2\sum_x r_x \bar{x}^2_{..} + \sum_x r_x\bar{x}^2_{..}\\
+	&= \sum_x r_x x^2 - 2\sum_x r_x x\bar{x}_{..} + \sum_x r_x \bar{x}^2_{..}\\
+	&= \sum_x r_x (x^2 - 2x\bar{x}_{..} + \bar{x}^2_{..})\\
+	&= \sum_x r_x(x - \bar{x}_{..})^2 = ss_{xx}
+\end{align*}
+So we have:
+\begin{align*}
+	\text{Var}(\hat{\beta}_1) &= \frac{\sigma^2}{(ss_{xx})^2}\cdot ss_{xx} = \frac{\sigma^2}{ss_{xx}}
+\end{align*}
+For part $(b)$:\vskip 2mm
+Since $\hat{\beta}_0 = \bar{y}_{..} - \hat{\beta}_1\bar{x}_{..}$, we have:
+\begin{align*}
+	\text{ Var }(\hat{\beta}_0) &= \text{Var}(\bar{y}_{..} - \hat{\beta}_1\bar{x}_{..})\\
+	&= \text{Var}(\bar{y}_{..}) + \text{Var}(\hat{\beta}_1\bar{x}_{..}) - 2\text{Cov}(\bar{y}_{..}, \hat{\beta}_1\bar{x}_{..})\\
+	&= \frac{\sigma^2}{n} + \bar{x}^2_{..}\cdot \frac{\sigma^2}{ss_{xx}} - 2\bar{x}_{..}\text{Cov}(\bar{y}_{..}, \hat{\beta}_1)
+\end{align*}
+Notice that:
+\begin{align*}
+	\text{Cov}(\bar{y}_{..}, \hat{\beta}_1) &= \text{Cov}\Big(\bar{y}_{..}, \frac{\sum_x\sum_t xy_{xt} - n\bar{x}_{..}\bar{y}_{..}}{ss_{xx}}\Big)\\
+	&= \frac{1}{ss_{xx}}\Big\{\sum_x\sum_t x \text{Cov}(\bar{y}_{..}, y_{xt}) - n\bar{x}_{..}\text{Var}(\bar{y}_{..})\Big\}\\
+	&= \frac{1}{ss_{xx}}\Big\{\sum_x\sum_t x\cdot \frac{\sigma^2}{n} - n\bar{x}_{..}\cdot \frac{\sigma^2}{n}\Big\}\\
+	&= \frac{1}{ss_{xx}}\Big\{\sigma^2\bar{x}_{..} - \sigma^2\bar{x}_{..}\Big\}\\
+	&= 0
+\end{align*}
+So we have:
+\begin{align*}
+	\text{ Var }(\hat{\beta}_0) &=  \frac{\sigma^2}{n} + \bar{x}^2_{..}\cdot \frac{\sigma^2}{ss_{xx}} = \sigma^2\Big(\frac{1}{n} + \frac{\bar{x}^2_{..}}{ss_{xx}}\Big)
+\end{align*}
+For part $(c)$:\vskip 2mm
+We have:
+\begin{align*}
+	\text{Var}\Big(\hat{Y}_{x_{a}t}\Big) &= \text{Var}\Big(\hat{\beta}_0 + \hat{\beta}_1 x_a\Big) = \text{Var}\Big(\bar{y}_{..} - \hat{\beta}_1\bar{x}_{..} + \hat{\beta}_1x_a\Big)\\
+	&= \text{Var}\Big(\bar{y}_{..} + (x_a - \bar{x}_{..})\hat{\beta}_1\Big)\\
+	&= \text{Var}\Big(\bar{y}_{..}\Big) + (x_a - \bar{x}_{..})^2\text{Var}(\hat{\beta}_1) + 2\text{Cov}\Big(\bar{y}_{..}, (x_a - \bar{x}_{..})\hat{\beta}_1\Big)\\
+	&= \frac{\sigma^2}{n} + (x_a - \bar{x}_{..})^2\frac{\sigma^2}{ss_{xx}} + 2(x_a - \bar{x}_{..})\cdot\underbrace{\text{Cov}(\bar{y}_{..}, \hat{\beta}_1)}_{ = 0 \text{ as shown in part (b)}}\\
+	&= \Big(\frac{1}{n} + \frac{(x_a - \bar{x}_{..})^2}{ss_{xx}}\Big)\sigma^2
+\end{align*}
+\end{sol}
+\end{document}

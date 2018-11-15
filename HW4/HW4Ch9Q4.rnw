@@ -1,0 +1,204 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+% \usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW4}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Chapter $9$ Question $4$.
+\begin{sol}
+  for part $(a)$:\vskip 2mm
+  <<tidy=FALSE, out.width='4in'>>=
+  #read the data
+  setwd("C:\\Akira\\R")
+  towel = read.csv("towel.csv", header = TRUE)
+  #plot absorbancy versus rate, using treatment level as the plotting symbol
+  #see whether between the treatments the absorbancy(y) vs rate(x) is different
+  cols = factor(towel$Treatment)
+levels(cols) = c("red", "orange", "yellow", "green", "blue", "purple")
+par(mar = c(5,5,4,2))
+fit = lm(towel$Absorbancy~towel$Rate)
+fit1 = lm(towel$Absorbancy~towel$Rate, subset = towel$Treatment ==1)
+fit2 = lm(towel$Absorbancy~towel$Rate, subset = towel$Treatment ==2)
+fit3 = lm(towel$Absorbancy~towel$Rate, subset = towel$Treatment ==3)
+fit4 = lm(towel$Absorbancy~towel$Rate, subset = towel$Treatment ==4)
+fit5 = lm(towel$Absorbancy~towel$Rate, subset = towel$Treatment ==5)
+fit6 = lm(towel$Absorbancy~towel$Rate, subset = towel$Treatment ==6)
+plot(towel$Rate, towel$Absorbancy, xlab = "Rate", ylab = "Absorbancy", 
+     cex.lab = 1.5, cex.axis = 1.3, cex = 1.3, pch = 19, 
+     col = as.character(cols))
+abline(a = coef(fit)[[1]], b = coef(fit)[[2]], lwd = 8, col = "grey")  
+abline(a = coef(fit1)[[1]], b = coef(fit1)[[2]], lwd = 2, col = "red") 
+abline(a = coef(fit2)[[1]], b = coef(fit2)[[2]], lwd = 2, col = "orange") 
+abline(a = coef(fit3)[[1]], b = coef(fit3)[[2]], lwd = 2, col = "yellow") 
+abline(a = coef(fit4)[[1]], b = coef(fit4)[[2]], lwd = 2, col = "green")
+abline(a = coef(fit5)[[1]], b = coef(fit5)[[2]], lwd = 2, col = "blue") 
+abline(a = coef(fit6)[[1]], b = coef(fit6)[[2]], lwd = 2, col = "purple") 
+  text(towel$Rate, towel$Absorbancy, labels= towel$Treatment)
+  @
+From the plot we find that the response of group $3$ and $4$ stay much lower than that of group $1$ and $6$, which indicates possible treatment effects. Also the slope(rate of change) of response versus the covariate are very different between treatment groups (for example, group $4$ and $6$ have positive slopes and the others have negative slopes, and they do not seem to be parallel either). It is possible that the ancova model is not appropriate, but consider we have really small sample here to give enough power, we hold this judgement conservatively.
+\vskip 2mm
+For part $(b)$:\vskip 2mm
+Our one way ancova model here is:
+\begin{align*}
+  Y_{it} = \mu + \tau_i + \beta(x_{it} - \bar{x}_{\cdot\cdot}) + \epsilon_{it}
+\end{align*}
+where $1 \leq i \leq 6$ and $1 \leq t \leq 2$. $\tau_i$ represents the treatment effect of ith treatment.
+<<tidy = FALSE>>=
+  fit <- lm(towel$Absorbancy ~ factor(towel$Treatment)+ towel$Rate)
+  anova(fit)
+  summary(fit)
+@
+The code above revelas information with the following translation:
+\begin{align*}
+  \mu &= 1.64778, \beta = -0.50766, \tau_1 = 0, \tau_2 = -0.09184 \\
+  \tau_3 &= -0.23737, \tau_4 = -0.36035, \tau_5 = -0.25928, \tau_6 = 0.03273
+\end{align*}
+and the ANCOVA table is also given above.
+\vskip 2mm
+For part $(c)$:\vskip 2mm
+We are plotting (standardized)residuals against the covariate, run order, predicted values, and normal scores to diagnose model assumptions.\vskip 2mm
+<<tidy = FALSE, out.width = '6in'>>=
+#compute SSE
+SSE <- sum((towel$Absorbancy - fit$fitted.values)^2) 
+#compute standardized residuals
+Z = fit$residuals/sqrt(SSE/11)
+cols = factor(towel$Treatment)
+par(mfrow = c(2, 2))
+plot(towel$Rate, Z, col = as.character(cols))
+text(towel$Rate, Z, labels=towel$Treatment)
+title(main = "std residuals vs covariates")
+plot(towel$Run, Z, col=as.character(cols))
+title(main = "std residuals vs run order")
+plot(fit$fitted.values, Z, col=as.character(cols))
+title(main = "std residuals vs predicted values")
+qqnorm(Z, col=as.character(cols))
+@
+Let's comment on these graphs:\vskip 2mm
+\begin{enumerate}
+\item for residuals against covariate, we actually need to look at the graph under each treatment level(so I differentiated the levels with different colors and labels) to decide if the linear relationship between response and covariate is really appropirate. However we only have two samples here within each treatment level, which has to be linear. But this may not necessarily true when we have more sample points within each treatment group. For now, let's consider it as appropriate.
+\item for residuals against run order, there does not seem to be any trend, so the independence assumption holds
+\item for residuals against predicted values, it seems the variance is more spread out to the sides and more condensed on the lower half in the middle, which suggests possibility of non-equal variance. But again, we have really small sample sizes here, so we hold this opinion conservatively.
+\item Finally, the qq plot gives a very well approximated straightline, shows support for the most important normal assumption.
+\end{enumerate}
+\vskip 2mm
+For part $(d)$:\vskip 2mm
+To formally test the equality of slopes:\vskip 2mm
+Our hypothesis is:
+\begin{align*}
+  H_0: \beta_i &= \beta_j \text{ for all }i, j\\
+  H_a: \beta_{i} &\neq \beta_j \text{ for at least some} i, j
+\end{align*}
+Then our full model is:
+\begin{align*}
+  y_{it} = \mu + \tau_i + \beta_i(x_{it} - \bar{x}_{\cdot\cdot}) + \epsilon_{it}
+\end{align*}
+and the reduced model is:
+\begin{align*}
+  y_{it} = \mu + \tau_i + \beta(x_{it} - \bar{x}_{\cdot\cdot}) + \epsilon_{it}
+\end{align*}
+To run the formal test, we should compute:
+\begin{align*}
+  \text{ss}\beta = \text{ssE}_{\text{reduced}} - \text{ssE}_{\text{full}}
+\end{align*}
+and find our F statisitc as:
+\begin{align*}
+  F = \frac{\text{ms}\beta}{\text{msE}_{\text{full}}}
+\end{align*}
+But if we look at the full model, the degree of freedom for $\text{ssE}$ is $12 - 6 -6 = 0$. This happens because within each group we have only two samples, and the linear model is gonna be a perfect fit and creates $0$ residuals.\vskip 2mm
+So unfortunately we could not formally test this hypothesis.\vskip 2mm
+But back to the graph of $(a)$ or the first graph of $(c)$, it is clear that the slope between treatment groups are different, so we tend to reject $H_0$. However we should still keep in mind this is a small sample case and the opinion should be held conservatively.
+% # <<tidy = FALSE>>=
+% #fullMod = lm(Absorbancy ~ factor(Treatment)*Rate, data = towel)
+% #anova(fullMod)
+% 
+% #SSEf = anova(fullMod)[[2]][[4]]
+% #MSEf = anova(fullMod)[[3]][[4]]
+% 
+% #redMod = lm(Absorbancy ~ factor(Treatment) + Rate, data = towel)
+% #anova(redMod)
+% #SSEr = anova(redMod)[[2]][[3]]
+% 
+% #g = 6
+% #N = nrow(towel)
+% #SSbeta = SSEr - SSEf
+% #MSbeta = SSbeta/(g-1)
+% 
+% #(Fstat = MSbeta/MSEf)
+% #(pvalue = pf(Fstat, df1 = (g-1), df2 = (N-2*g), lower.tail = F))
+% 
+% #@
+\vskip 2mm
+For part $(e)$:\vskip 2mm
+If we look at the ANCOVA table in part $(b)$, given the treatment factors(reduced model is ANOVA model), we see that the covariate does take effect significantly (p value $0.043118<0.05$). Now when we consider the treatment effects, we should condition on being given covariate. So the code will be different(just like the full model $1$ and full model $2$ as in the balloon example of lecture $21$.)\vskip 2mm
+So we have:\vskip 2mm
+<<tidy=FALSE>>=
+fit <- lm(towel$Absorbancy ~ towel$Rate + factor(towel$Treatment))
+anova(fit)
+@
+the p value for testing $H_0: \tau_1 = \ldots = \tau_6$ is $0.016689< 0.05$, so we reject $H_0$ and consider at least two treatment groups have different effects, given the existence of covariates.\vskip 2mm
+For part $(f)$:\vskip 2mm
+Our model here is:
+\begin{align*}
+  Y_{ijt} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \theta(x_{ijt} - \bar{x}_{\cdot\cdot\cdot}) + \epsilon_{ijt}
+\end{align*}
+We run the two way ANCOVA model as follows:
+<<tidy = FALSE>>=
+  fit <- lm(Absorbancy~Rate + factor(A)*factor(B), data = towel)
+  anova(fit)
+@
+For the interaction part we got p value $0.0255 < 0.05$ so we fail to reject there is no interaction. Since there is interaction, tests for main effects would be not much of interest. However if we do want to get a formal result, from the ANCOVA table, both p values for the main effects $<0.05$ so we consider both brand and printing do have separate treatment effects on the absorbancy.
+\end{sol}
+\end{document}

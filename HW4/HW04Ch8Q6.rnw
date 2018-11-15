@@ -1,0 +1,119 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW4}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Chapter $8$ Question $6$.
+\begin{sol}
+For part $(a)$: let's first input the data:
+<<tidy = FALSE>>=
+hour <- c(rep(12, 17), rep(18, 17), rep(24, 17), rep(30, 17))
+length <- c( 5, 11,  8, 11,  4,  4,  8,  3,  6,  4,  7,  3,  5,  4,  6,  9,  3, 
+            11, 16, 18, 24, 18, 18, 21, 14, 21, 19, 17, 24, 14, 20, 16, 20, 22,
+            17, 16, 26, 18, 14, 24, 18, 14, 24, 26, 21, 21, 22, 19, 14, 19, 19,
+            20, 18, 22, 20, 21, 17, 16, 23, 25, 19, 21, 20, 27, 25, 22, 23, 23)
+soak <- data.frame(hour, length)
+@
+Then fit the quadratic regression model to the data:
+<<tidy = FALSE>>=
+soak$hour2 = soak$hour^2
+fit.quad = lm(length ~ hour + hour2, data = soak)
+summary(fit.quad)
+@
+then we plot the fitted response curve against the soaking time
+<<tidy= FALSE>>=
+plot(soak$hour,soak$length)
+curve(coef(fit.quad)[[1]] + coef(fit.quad)[[2]]*x + coef(fit.quad)[[3]]*x^2,
+       add = T, from = 0, to = 42, lwd = 3, col = "blue")
+@
+It appears that at hours $18$ and $24$, the fitted curve deviates quite far away from the mean of the reponse(length), which indicates a possibility of lack of fit.\vskip 2mm
+we can further plot the standardized residue against the soaking time:
+<<tidy = FALSE>>=
+SSE = sum((soak$length - fit.quad$fitted.values)^2)
+Z = fit.quad$residuals/sqrt(SSE/67)
+plot(soak$hour, Z)
+abline(a = 0, b = 0, lwd = 2)
+@
+We also observe a large deviation from the within-group mean of the standardized residuals at hours $18$ and $24$, which indicates a possible lack of fit.\vskip 2mm
+Now for part $(b)$, let's actually run a lack of fit test.\vskip 2mm
+We have null hypothesis:
+\begin{align*}
+  H_0^Q: E[Y_{xt}] = \beta_0 + \beta_1 x + \beta_2 x^2
+\end{align*}
+versus the alternative hypothesis:
+\begin{align*}
+  H_A^Q: E[Y_{xt}] = \mu + \tau_x
+\end{align*}
+We have under the alternative hypothesis:
+<<tidy = FALSE>>=
+#
+fit.aov = aov(length ~ as.factor(hour), data = soak)
+summary(fit.aov)
+@
+so we can compute
+<<tidy = FALSE>>=
+SSPE=702.8
+MSPE=11.0
+#sum of square and mean square for lack of fit
+#degree of freedom: (N - (p + 1)) - (N - 4) = 4 - (p + 1) = 4 - 3 = 1
+SSLOF = SSE - SSPE
+MSLOF = SSLOF/1
+MSLOF/MSPE > qf(0.95, df1 = 1, df2 = 64, lower.tail = T)
+@
+According to the above lack of fit test, we reject the null hypothesis, which interprets as the quadratic polynomial regression model is NOT adequate.
+\end{sol}
+\end{document}

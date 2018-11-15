@@ -1,0 +1,172 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+% \usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW4}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Chapter $10$ Question $10$.
+\begin{sol}
+we copy the data into a .csv file and read it:
+<<tidy = FALSE>>=
+  #read the data
+  setwd("C:\\Akira\\R")
+  devia = read.csv("devia.csv", header = TRUE)
+@
+For part $(a)$:\vskip 2mm
+We are fitting a block-treatment model, so we do not consider interaction. Also since each treatment is only applied once in each block, so our model is a randomized complete block design.
+\begin{align*}
+  Y_{hi} = \mu + \theta_h + \tau_i + \epsilon_{hi} 
+\end{align*}
+with $1 \leq h \leq 14, 1 \leq i \leq 6$, and $\epsilon_{hi} \sim N(0, \sigma^2)$ i.i.d.\vskip 2mm
+we fit the data and check error assumption as follows:
+<<tidy = FALSE, out.width = '6in'>>=
+fit <- lm(response ~ factor(subject) + factor(treatment), data = devia)
+anova(fit)
+@
+To check the error assumption:
+<<tidy = FALSE>>=
+SSE <- sum((devia$response - fit$fitted.values)^2)
+Z = fit$residuals/sqrt(SSE/83)
+par(mfrow = c(2, 1))
+cols = factor(devia$treatment)
+plot(fit$fitted.values, Z, col=as.character(cols))
+title(main = "std residuals vs predicted values")
+qqnorm(Z, col=as.character(cols))
+@
+We can not check independence since there is no infor for run order. We plotted residuals against predicted value and do not see much pattern, so the equal variance assumption holds.\vskip 2mm
+We plotted normal qq plot and the straight line pattern shows support for normality.\vskip 2mm
+So in general we think the error assumptions are satisfied here.\vskip 2mm
+For part $(b)$:\vskip 2mm
+We can check interaction between block and treatment factor here:
+<<tidy = FALSE, fig.width=5, fig.height = 3>>=
+library(ggplot2)
+ggplot(data=devia, aes(x=factor(treatment), y = response, color = subject))+
+  geom_line(aes(group=subject), linetype = "dotted") +geom_point()
+@
+apparently there is no parallel pattern. So we do believe there is interaction between the block(subject) and the treatment combination.
+For prat $(c)$:\vskip 2mm
+I coded the treatment combinations as $1, 2, 3, 4, 5, 6$ while $1$ for $11$, $2$ for $12$, $3$ for $21$, $4$ for $22$, $5$ for $31$, $6$ for $32$. So in order to make it clear which treatment combination we are looking at, instead of saying $\tau_1$, I would temporarily use double index as $\tau_{11}$.\vskip 2mm
+we look at the following contrasts:
+\begin{enumerate}
+  \item differences in the effects of area for each shape separately. So the contrast is:
+  \begin{align*}
+    &\ \tau_{11} - \tau_{12}, \text{ i.e. } (1, -1, 0, 0, 0, 0)\\
+    &\ \tau_{21} - \tau_{22}, \text{ i.e. } (0, 0, 1, -1, 0, 0)\\
+    &\ \tau_{31} - \tau_{32}, \text{ i.e. } (0, 0, 0, 0, 1, -1)
+  \end{align*}
+  \item average difference in the effects of area, so the contrast is:
+  \begin{align*}
+    &\ \frac{1}{3}(\tau_{11} + \tau_{21} + \tau_{31}) - \frac{1}{3}(\tau_{12} + \tau_{22} + \tau_{32})\\
+    &\text{i.e. } (\frac{1}{3}, -\frac{1}{3}, \frac{1}{3}, -\frac{1}{3}, \frac{1}{3}, -\frac{1}{3})
+  \end{align*}
+  \item  average difference in the effects of shape, so the contrast is:
+  \begin{align*}
+    &\ \frac{1}{2}(\tau_{11} + \tau_{12}) - \frac{1}{2}(\tau_{21} + \tau_{22}) 
+    \text{ i.e. } (\frac{1}{2}, \frac{1}{2}, -\frac{1}{2}, -\frac{1}{2}, 0, 0)\\
+    &\ \frac{1}{2}(\tau_{11} + \tau_{12})- \frac{1}{2}(\tau_{31} + \tau_{32})
+    \text{ i.e. } (\frac{1}{2}, \frac{1}{2}, 0, 0, -\frac{1}{2}, -\frac{1}{2})\\
+    &\ \frac{1}{2}(\tau_{21} + \tau_{22})- \frac{1}{2}(\tau_{31} + \tau_{32})
+    \text{ i.e. } (0, 0, \frac{1}{2}, \frac{1}{2}, -\frac{1}{2}, -\frac{1}{2})
+  \end{align*}
+\end{enumerate}
+\vskip 2mm
+For part $(d)$:\vskip 2mm
+We use Scheffe's method to build our confidence intervals here:
+<<tidy = FALSE>>=
+a<-c(1, -1, 0, 0, 0, 0)
+b<-c(0, 0, 1, -1, 0, 0)
+c<-c(0, 0, 0, 0, 1, -1)
+contrast <- list(a, b, c)
+n <- length(contrast)
+msE <- anova(fit)[[3]][[3]]
+msE
+#compute \bar{Y}_{dot i}
+y <- c()
+for (i in 1:6){
+y[i] <- mean(devia[devia$treatment==i,]$response)
+}
+#compute Scheffe critical coefficient
+w_S <- sqrt(5*qf(0.01, 5,65, lower.tail = FALSE))
+w_S
+#compute 99% confidence interval
+for (i in 1:n){
+#compute least square estimate
+lse <- sum(contrast[[i]]*y)
+#compute msd
+msd <- w_S*sqrt(msE*sum(contrast[[i]]^2)/14)
+#compute lower and upper bound for CI
+ci_lower<- lse-msd
+ci_upper<- lse+msd
+#print the result of CI
+cat("The CI for (", contrast[[i]], ") is (", 
+    ci_lower<- lse-msd, ", ", ci_upper<- lse+msd, ")", "\n")
+}
+@
+all three intervals include $0$, which means we fail to reject the corresponding hypothesis tests. This is interpreted as, with $99\%$ confidence, there is NO statistical significance for the claim that the effects of area is different for any/each separate shape.\vskip 2mm
+For part $(e)$:\vskip 2mm
+$(c)(ii)$ and $(c)(iii)$ are considering the main effect of one treatment averaged over the other, so it is only of interest if the shape and area do not have interaction.\vskip 2mm
+To test interaction, our full model is:
+\begin{align*}
+ Y_{hij} = \mu + \theta_h + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{hij}
+\end{align*}
+and reduced model is our block-treatment model.
+<<tidy = FALSE>>=
+fit <- lm(response ~ factor(subject) + factor(shape)*factor(area), data = devia)
+anova(fit)
+@
+The p value for interaction test is $0.1616572 > 0.05 > 0.01$, so we retain the null hypothesis  that there is NO interaction, so the above contrasts are of our interest here.
+\end{sol}
+\end{document}
