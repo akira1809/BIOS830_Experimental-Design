@@ -1,0 +1,151 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW5}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch $10.$ Question $7$.
+\begin{sol}
+For part $(a)$:\vskip 2mm
+We know that the in a BIBD case, the model is:
+\begin{align*}
+	Y_{hi} = \mu + \theta_h + \tau_i + \epsilon_{hi}
+\end{align*}
+where $\epsilon_{hi} \sim N(0, \sigma^2) \text{ i.i.d}$ and $(h, i)$ in the design, with $1 \leq h \leq b$ and $1 \leq i \leq v$.\vskip 2mm
+ The least square estimate for any contrast $\sum_i c_i\tau_i$ is:
+\begin{align*}
+	\sum_i c_i\hat{\tau}_i = \frac{k}{\lambda v}\sum c_i Q_i 
+\end{align*}
+where
+\begin{align*}
+	Q_i &= T_i - \frac{1}{k}\sum_{h = 1}^bn_{hi}B_h\hskip 2mm \text{adjusted sum on treatment }i\\
+	T_i &= \sum_{h = 1}^b n_{hi}y_{hi}\hskip 2mm \text{unadjusted sum on treatment }i\\
+	B_h &= \sum_{i = 1}^v n_{hi}y_{hi} \hskip 2mm \text{sum of observations in block }h
+\end{align*}
+So particularly, we have for contrast $\tau_4 - \tau_6$, there is least square estimate:
+\begin{align*}
+	\hat{\tau}_4 - \hat{\tau}_6 &= \frac{3}{1 \times 9}\Big(Q_4 - Q_6\Big)\\
+	&= \frac{1}{3}\Big[\Big(T_4 - \frac{1}{3}\sum_{h = 1}^{12}n_{h4}B_h\Big) - \Big(T_6 - \frac{1}{3}\sum_{h  = 1}^{12}n_{h6}B_h\Big)\Big]\\
+\end{align*}
+So we have the expectation:
+\begin{align*}
+	E[\hat{\tau}_4 - \hat{\tau}_6] &= \frac{1}{3}E[T_4 - T_6] - \frac{1}{9}E[\sum_{h = 1}^{12}(n_{h4} - n_{h6})B_h]
+\end{align*}
+Now follow Table $11.8$ on page $355$, we have:
+\begin{align*}
+	T_4 &= Y_{14} + Y_{24} + Y_{64} + Y_{84}\\
+	T_6 &= Y_{36} + Y_{56} + Y_{66} + Y_{96}
+\end{align*}
+Also we got:
+\begin{align*}
+	& n_{14} = 1, n_{16} = 0; n_{24} = 1, n_{26} = 0; n_{34} = 0, n_{36} = 1; n_{44} = 0, n_{46} = 0; \\
+	& n_{54} = 0, n_{56} = 1; n_{64} = 1, n_{66} = 1; n_{74} = 0, n_{76} = 1, n_{84} = 1, n{86} = 0;\\
+	& n_{94} = 0, n_{96} = 1; n_{10, 4} = 0, n_{10, 6} = 0; n_{11, 4} = 0, n_{11, 6} = 0, n_{12, 4} = 0, n_{12, 6} = 0
+\end{align*}
+So we got:
+\begin{align*}
+	\sum_{h = 1}^{12}(n_{h4} - n_{h6})B_h &= B_1 + B_2 - B_3 - B_5 + B_8 - B_9
+\end{align*}
+Specifically, we have:
+\begin{align*}
+	 B_1 &= Y_{13} + Y_{14} + Y_{18}\\
+	 B_2 &= Y_{22} + Y_{24} + Y_{29}\\
+	 B_3 &= Y_{33} + Y_{36} + Y_{39}\\
+	 B_5 &= Y_{52} + Y_{56} + Y_{57}\\
+	 B_8 &= Y_{81} + Y_{84} + Y_{87}\\
+	 B_9 &= Y_{91} + Y_{96} + Y_{98}
+ \end{align*}
+ So 
+ \begin{align*}
+ 	E[\hat{\tau}_4 - \hat{\tau}_6] &= \frac{1}{3}E[T_4 - T_6] - \frac{1}{9}E[\sum_{h = 1}^{12}(n_{h4} - n_{h6})B_h]\\
+ 	&= \frac{1}{3}E\Big[\Big(Y_{14} + Y_{24} + Y_{64} + Y_{84}\Big) - \Big(Y_{36} + Y_{56} + Y_{66} + Y_{96}\Big)\Big]\\
+ 	&\ \ \ - \frac{1}{9}E\Big[B_1 + B_2 - B_3 - B_5 + B_8- B_9\Big]
+\\
+ &= \frac{1}{3}\Big[\cancel{\Big(4\mu - 4\mu\Big)}+ \Big(\theta_1 + \theta_2 + \theta_6 + \theta_8\Big) - \Big(\theta_3 + \theta_5 + \theta_6 + \theta_9\Big) + 4\tau_4 - 4\tau_6\Big]\\
+&\ \ \ \ - \frac{1}{9}\Big[\cancel{\Big(3\mu + 3\mu - 3\mu - 3\mu + 3\mu - 3\mu\Big)} 
++ 3\Big(\theta_1 + \theta_2 - \theta_3 - \theta_5 + \theta_8 - \theta_9\Big)\\
+ &\ \ \ + (\tau_3 + \tau_4 + \tau_8) + (\tau_2 + \tau_4 + \tau_9) - (\tau_3 + \tau_6 + \tau_9) - (\tau_2 + \tau_6 + \tau_7) + (\tau_1 + \tau_4 + \tau_7) \\
+ &\ \ - (\tau_1 + \tau_6 + \tau_8)\Big]\\
+  \end{align*}
+  Let's check the coefficients for each block:
+  \begin{align*}
+  &\theta_1: \frac{1}{3} + (-\frac{1}{3}\times 3) = 0\hskip 5mm \theta_2: \frac{1}{3} + (-\frac{1}{9} \times 3) = 0 \hskip 5mm \theta_3: -\frac{1}{3} + (-\frac{1}{9})\times (-3) = 0\\
+  &\theta_5: -\frac{1}{3} + (-\frac{1}{9}) \times (-3) = 0 \hskip 5mm \theta_6: \frac{1}{3} - \frac{1}{3} = 0 \hskip 5mm \theta_8: \frac{1}{3} + (-\frac{1}{9})\times 3 = 0\\
+  &\theta_9: -\frac{1}{3} + (-\frac{1}{9}) \times (-3) = 0
+  \end{align*}
+  Also we have the coefficients for each treatment:
+  \begin{align*}
+  	&\tau_1: -\frac{1}{9} \times (1 - 1) = 0 \hskip 5mm \tau_2: -\frac{1}{9} \times (1 - 1) = 0 \hskip 5mm \tau_3: -\frac{1}{9} \times (1 - 1) =0 \\
+  	&\tau_4: \frac{4}{3} - \frac{1}{9} \times 3 = \frac{4}{3} - \frac{1}{3} = 1\hskip 5mm \tau_6: -\frac{4}{3} - \frac{1}{9} \times (-3) = -\frac{4}{3} + \frac{1}{3} = -1\\
+  	&\tau_7: -\frac{1}{9} \times (-1 + 1) = 0 \hskip 5mm \tau_8: -\frac{1}{9} \times (1 - 1) = 0 \hskip 5mm \tau_9: (-\frac{1}{9})\times (1 - 1) = 0
+  \end{align*}
+  So in summary, we have:
+  \begin{align*}
+  	E[\hat{\tau}_4 - \hat{\tau}_6] = \tau_4 - \tau_6
+  \end{align*}
+  which means the least square estimate is unbiased.\vskip 2mm
+  For part $(b)$:\vskip 2mm
+  For short solution, we can use the result from page $354$ that for any contrast $\sum_i c_i\tau_i$ in BIBD model, we have
+  \begin{align*}
+  	\text{Var}\Big(\sum_i c_i\hat{\tau}_i\Big) &= \sum_i c_i^2\Big(\frac{k}{\lambda v}\Big)\sigma^2
+  \end{align*}
+  Then in our case we have:
+  \begin{align*}
+  	\text{Var}\Big(\hat{\tau}_4 - \hat{\tau}_6\Big) = \frac{2k\sigma^2}{\lambda v}
+  \end{align*}
+  If we really want to verify this in detail, we can use the formula developed in part $(a)$, single out all the independent $Y_{hi}$, and sum up their variance with coefficients. We should be able to get the answer matching the one above.
+\end{sol}
+\end{document}

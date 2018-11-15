@@ -1,0 +1,147 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+%\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW5}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch $12.$ Question $7$.
+\begin{sol}
+Our model here is still with the form:
+\begin{align*}
+  Y_{hqi} = \mu + \theta_h + \phi_q + \tau_i + \epsilon_{hqi}
+\end{align*}
+while $\epsilon_{hqi} \sim N(0, \sigma^2), i.i.d.$. Also $h = 1, \ldots, b; q = 1, \ldots, c; i = 1, \ldots, v; (h, q, i)$ in the design.\vskip 2mm
+In our case, we have $b= v = 5, c = 4$.\vskip 2mm
+To obtain the ANOVA table, the work is similar to question 6:
+<<tidy = FALSE>>=
+#read in the data
+setwd("C:\\Akira\\R")
+game2 = read.csv("game2.csv", header = TRUE)
+
+#fit the model
+fit <- lm(response ~ factor(day) + factor(time) + 
+            factor(treatment), data = game2)
+anova(fit)
+@
+From the anova table we see that now the sum square of column block(day) is larger than error sum of square error, which indicates effect on treatment from the column block However the treatment factor still has a p value $> 0.05$ indicates there is no treatment effect.\vskip 2mm
+Now to work part $(e)$:\vskip 2mm
+Under the Yuden mode, the least square estimate for any contrast $\sum_i d_i\tau_i$(without replication) is:
+\begin{align*}
+  \sum d_i\hat{\tau}_i = \frac{c}{\lambda v}\sum_i d_i Q_i = \Big(\frac{v - 1}{v(c - 1)}\Big)\sum_i d_iQ_i
+\end{align*}
+where
+\begin{align*}
+Q_i = T_i - \frac{1}{c}\sum_h n_{h\cdot i}B_h
+\end{align*}
+So if we use scheffe's method, the $100(1-\alpha)\%$ confidence interval is:
+\begin{align*}
+  \sum_i d_i\tau_i \in \Big(\Big(\frac{v - 1}{v(c - 1)}\Big)\sum_i d_iQ_i \pm \sqrt{(v - 1)F_{v - 1, (v-1)(c-1) - (v-1), \alpha}}\sqrt{\text{msE}\Big(\frac{v - 1}{v(c - 1)}\Big)\sum d_i^2}\Big)
+\end{align*}
+So we have:
+<<tidy = FALSE>>=
+a<-c(1, -1, 0, 0, 0)
+b<-c(1, 0, -1, 0, 0)
+c<-c(1, 0, 0, -1, 0)
+d<-c(1, 0, 0, 0, -1)
+e<-c(0, 1, -1, 0, 0)
+f<-c(0, 1, 0, -1, 0)
+g<-c(0, 1, 0, 0, -1)
+h<-c(0, 0, 1, -1, 0)
+k<-c(0, 0, 1, 0, -1)
+l<-c(0, 0, 0, 1, -1)
+m<-c(0.33, 0.33, 0.33, -0.5, -0.5)
+o<-c(0.25, 0.25, 0.25, 0.25, -1)
+contrast <- list(a, b, c, d, e, f, g, h, k, l, m, o)
+n <- length(contrast)
+msE <- anova(fit)[[3]][[4]]
+msE
+#compute T_i
+T <- as.vector(tapply(game2$response, game2$treatment, sum))
+#compute B_h
+B <- as.vector(tapply(game2$response, game2$time, sum))
+#compute Q_i
+n_1 <- c(1, 1, 1, 1, 0)
+n_2 <- c(1, 1, 0, 1, 1)
+n_3 <- c(1, 1, 1, 0, 1)
+n_4 <- c(1, 0, 1, 1, 1)
+n_5 <- c(0, 1, 1, 1, 1)
+n_hi <- list(n_1, n_2, n_3, n_4, n_5)
+Q <- c()
+for (i in 1:5){
+  Q[i] <- T[i] - 1/4*sum(n_hi[[i]]*B)
+}
+#compute Scheffe critical coefficient
+w_S <- sqrt(4*qf(0.05, 4, 8, lower.tail=FALSE))
+w_S
+#compute 95% confidence interval
+for (i in 1:n){
+#compute least square estimate
+lse <- sum(contrast[[i]]*Q)*4/15
+#compute msd
+msd <- w_S*sqrt(msE*sum(contrast[[i]]^2)*4/15)
+#compute lower and upper bound for CI
+ci_lower<- lse-msd
+ci_upper<- lse+msd
+#print the result of CI
+cat("The CI for (", contrast[[i]], ") is (", 
+    ci_lower<- lse-msd, ", ", ci_upper<- lse+msd, ")", "\n")
+}
+@
+All the confidence intervals still include $0$ as are in question $6$. So we still conclude that there is no statistically significant difference between different background music, or between having game sound or not, or between having backgorund music or not.\vskip 2mm
+For part $(f)$:\vskip 2mm
+so we conclude the same as in question $6$, that different backgorund music, or having music or not, having game sound or not, does not make a statistically significant difference on the performence on the game. So the professor should pick any arbitrary sound mode to play.
+\end{sol}
+\end{document}

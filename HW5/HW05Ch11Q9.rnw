@@ -1,0 +1,134 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+%\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW5}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch $11.$ Question $9$.
+\begin{sol}
+For part $(a)$:\vskip 2mm
+to check the design is BIBD(balanced incomplete block design), we need to check the following:
+\begin{enumerate}
+	\item the design is binary, i.e., each treatment label appear either once or not at all in a block. It is easy to see this is satisfied.
+	\item we see that each pair of label appears together in $\lambda = 2$ blocks.
+\end{enumerate}
+So the design is really BIBD.\vskip 2mm
+For part $(b)$:\vskip 2mm
+The randomization goes by two parts:
+\begin{enumerate}
+	\item randomly assign the subjects to the blocks
+	\item within each block(subject), randomize the order in which the $3$ levels of treatment factors are given to the subject.
+\end{enumerate}
+\vskip 2mm
+for part $(c)$:\vskip 2mm
+There might be potential interaction between the block(subjects) and the treatment(drugs). If it is the case, then the treatment model $(11.3.1)$ would not be adequate.
+\vskip 2mm
+For part $(d)$:\vskip 2mm
+becareful here that treatment $i = 2$ is really represented by label $1$. (treatment $1$ is labeld by $0$).
+<<tidy = FALSE>>=
+T <- c(385, 582, 329, 674)
+B<- c(417, 507, 469, 577)
+n_2 <- c(1, 1, 0, 1)
+Q_2 <- T[2] - sum(n_2*B)/3
+Q_2
+@
+so we have verified that $Q_2 = 81.667$.
+\vskip 2mm
+For part $(e)$:\vskip 2mm
+For any contrast $\sum_i c_i\tau_i$ under the BIBD model, we have $100(1 - \alpha)\%$ confidence interval as:
+\begin{align*}
+  \sum_ic_i\tau_i \in \Big(\frac{k}{\lambda v}\sum_i c_iQ_i \pm \frac{q_{v, bk - b - v + 1, \alpha}}{\sqrt{2}}\sqrt{\sum c_i^2(\frac{k}{\lambda v})\text{msE}}\Big)
+\end{align*}
+So for $\tau_3 - \tau_2$, we have:
+<<tidy = FALSE>>=
+k <-3
+lambda <- 2
+v <- 4
+b <- 4
+Q <- c(-79.333, 81.667, -158.667, 156.333)
+msE <- 3.683
+contrast <- c(0, -1, 1, 0)
+CI.lower <- k/(lambda*v)*(Q[3] - Q[2]) - 
+  qtukey(0.05, v, df = b*k-b-v+1, lower.tail = FALSE)*sqrt(k/(lambda*v)*msE)
+CI.upper <- k/(lambda*v)*(Q[3] - Q[2]) + 
+  qtukey(0.05, v, df = b*k-b-v+1, lower.tail = FALSE)*sqrt(k/(lambda*v)*msE)
+cat('The 95% confidence interval for (', contrast, ') is [', 
+    CI.lower, ',', CI.upper, ']')
+@
+Since it does not include $0$, we conclude that there is a difference between treatment $3$ (labeled as drug number $2$) and treatment $2$ (labeled as drug number $1$).
+\vskip 2mm
+For part $(f)$:\vskip 2mm
+We want to test the hypothesis that:
+\begin{align*}
+  H_0: \tau_1 = \tau_2 = \tau_3 = \tau_4
+\end{align*}
+against
+\begin{align*}
+  H_1: \tau_i \neq \tau_j, \text{ for some }i \neq j
+\end{align*}
+<<tidy = FALSE>>=
+k <-3
+lambda <- 2
+v <- 4
+ssTadj <- k/(lambda*v)*62578.335
+msE <- 3.683
+F <- (ssTadj/(v - 1))/msE
+p <- pf(F, v-1, b*k-b-v+1, lower.tail=FALSE)
+cat('The p value is', p)
+@
+we see that our p value for the test is smaller than $\alpha = 0.05$, so we reject the null hypothesis and conclude that the drugs do have different treatment effect.
+\end{sol}
+\end{document}

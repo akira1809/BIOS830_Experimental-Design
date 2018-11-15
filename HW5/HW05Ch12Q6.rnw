@@ -1,0 +1,189 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+%\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW5}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch $12.$ Question $6$.
+\begin{sol}
+For part $(a)$:\vskip 2mm
+The model for this Latin Square design is:
+\begin{align*}
+  Y_{hqi} = \mu + \theta_h + \phi_q + \tau_i + \epsilon_{hqi}
+\end{align*}
+while $\epsilon_{hqi} \sim N(0, \sigma^2), i.i.d.$. Also $h = 1, \ldots, b; q = 1, \ldots, c; i = 1, \ldots, v; (h, q, i)$ in the design.\vskip 2mm
+In our case, we have $b = c = v = 5$.
+<<tidy = FALSE>>=
+#read in the data
+setwd("C:\\Akira\\R")
+game = read.csv("game.csv", header = TRUE)
+
+#fit the model
+fit <- lm(response ~ factor(day) + factor(time) + 
+            factor(treatment), data = game)
+anova(fit)
+@
+to check model assumptions, we need the following plots:
+<<tidy=FALSE>>=
+#plot for model diagnostic
+par(mfrow = c(2, 2))
+SSE <- sum((game$response - fit$fitted.values)^2)
+Z = fit$residuals/sqrt(SSE/24)
+cols = factor(game$treatment)
+plot(game$order, Z, col=as.character(cols))
+title(main = "std residuals vs run order")
+plot(fit$fitted.values, Z, col=as.character(cols))
+title(main = "std residuals vs predicted values")
+plot(game$time, Z, col = as.character(cols))
+title(main = "std residuals vs row blocking")
+plot(game$day, Z, col = as.character(cols))
+title(main = "std residuals vs column blocking")
+plot(game$treatment, Z, col = as.character(cols))
+title(main = "std residuals vs treatment")
+qqnorm(Z, col=as.character(cols))
+@
+To check independence, we look at residuals against run order(run order is from day $1$ time $1$ until day $5$ time $5$). Since there is no pattern or trend, we consider the independence assumption valid.\vskip 2mm
+To check equal variance, we look at residuals against predicted value and residuals against treatment. Both of them do show a sign of non-equal variance. But keep in mind this is a latin square design and for either row block or column block it is randomized complete block design, so we have really small sample compared to blocks. Thus it is hard to tell. \vskip 2mm
+To check normality, we look at QQ plot, and it does give a well formed straight line, so we consider normality assumption holds.\vskip 2mm
+Finally, to see the effect of row or column blocks on the response, we look at residuals against row or column blocking. Both graphs shows no apparent difference of residuals among different row/column blocking factors, which implies that the row and column design here may not be necessary. In fact it matches with our observation from the anova table above. Both sum of squares for row and column blocks are smaller than the error sum of square. By rule of thumb we think the row and column blocks should not have effect on the response.
+\vskip 2mm
+For part $(b)$:\vskip 2mm
+Under the latin square model, the adjusted data is:
+\begin{align*}
+  y^{\ast}_{hqi} &= y_{hqi} - \Big(\frac{1}{v}B_h - \frac{1}{v^2}G\Big) - \Big(\frac{1}{v}C_q - \frac{1}{v^2}G\Big)
+\end{align*}
+We compute and plot this adjusted value against treatment factor:
+<<tidy=FALSE, fig.width=5, fig.height = 3>>=
+v <- 5
+B <- as.vector(tapply(game$response, game$time, sum))
+C <- as.vector(tapply(game$response, game$day, sum))
+G <- sum(B)
+res_adj <- game$response - (1/v*B[game$time] - 1/v^2*G) - 
+  (1/v*C[game$day] - 1/v^2*G)
+plot(game$treatment, res_adj, col= as.character(cols))
+boxplot(res_adj~game$treatment,main="adjust response vs treatment", 
+  	xlab="treatment", ylab="adjusted response", col=as.character(cols))
+@
+From the plots above we see that there might be a treatment effect such that under the first treatment, the game performence is worse than the rest, and under the last treatment, the game performence is higher htan the rest. The anova table from part $(a)$ shows a marginal difference too (p value slightly larger than $0.05$).\vskip 2mm
+For part $(c)$:\vskip 2mm
+For ANOVA table, we already did it in part $(a)$.\vskip 2mm
+For prat $(d)$:\vskip 2mm
+To check the effectiveness of block, we need to see the adjusted blocking effect.\vskip 2mm
+For row blocking effect (adjust time order):
+<<>>=
+fit <- lm(response ~ factor(day) +
+            factor(treatment) + factor(time), data = game)
+anova(fit)
+@
+Since sum square of time order is smaller than error sum of square, by rule of thumb we consider the time order does not have effect on the game performance.\vskip 2mm
+For column blocking effect (adjust day):
+<<>>=
+fit <- lm(response ~ factor(time) + factor(treatment) + 
+            factor(day), data = game)
+anova(fit)
+@
+Since the sum square of day is smaller than error sum of square, by rule of thumb we consider the day order does not have effect on the game performance.\vskip 2mm
+For part $(e)$:\vskip 2mm
+Under the Latin square model(without replication), the least square estimate for any contrast $\sum_i d_i\tau_i$ is:
+\begin{align*}
+  \sum_i d_i\hat{\tau}_i = \frac{1}{v}\sum d_iT_i
+\end{align*}
+We use Scheffe method here, and the $100(1-\alpha)\%$ confidence interval is:
+\begin{align*}
+  \sum d_i\tau_i \in \Big(\frac{1}{v}\sum d_iT_i \pm \sqrt{(v-1)F_{v-1, (v-2)(v-1), \alpha}}\sqrt{\text{msE}\Big(\frac{\sum d_i^2}{v}\Big)}\Big)
+\end{align*}
+So we have:
+<<tidy = FALSE>>=
+a<-c(1, -1, 0, 0, 0)
+b<-c(1, 0, -1, 0, 0)
+c<-c(1, 0, 0, -1, 0)
+d<-c(1, 0, 0, 0, -1)
+e<-c(0, 1, -1, 0, 0)
+f<-c(0, 1, 0, -1, 0)
+g<-c(0, 1, 0, 0, -1)
+h<-c(0, 0, 1, -1, 0)
+k<-c(0, 0, 1, 0, -1)
+l<-c(0, 0, 0, 1, -1)
+m<-c(0.33, 0.33, 0.33, -0.5, -0.5)
+o<-c(0.25, 0.25, 0.25, 0.25, -1)
+contrast <- list(a, b, c, d, e, f, g, h, k, l, m, o)
+n <- length(contrast)
+msE <- anova(fit)[[3]][[4]]
+msE
+#compute T_i
+T <- as.vector(tapply(game$response, game$treatment, sum))
+#compute Scheffe critical coefficient
+w_S <- sqrt(4*qf(0.05, 4,12, lower.tail = FALSE))
+w_S
+#compute 95% confidence interval
+for (i in 1:n){
+#compute least square estimate
+lse <- sum(contrast[[i]]*T)/5
+#compute msd
+msd <- w_S*sqrt(msE*sum(contrast[[i]]^2)/5)
+#compute lower and upper bound for CI
+ci_lower<- lse-msd
+ci_upper<- lse+msd
+#print the result of CI
+cat("The CI for (", contrast[[i]], ") is (", 
+    ci_lower<- lse-msd, ", ", ci_upper<- lse+msd, ")", "\n")
+}
+@
+All the contrast above, the confidence intervals include $0$, from which we can conclude: there is no treatment difference between any two single treatments, and there is no treatment difference between the gameing with music versus without, and no difference between gaming with sound versus no sound.\vskip 2mm
+For part $(f)$:\vskip 2mm
+Based on what we analyzed in part $(a) - (e)$, we conclude that different backgorund music, or having music or not, having game sound or not, does not make a statistically significant difference on the performence on the game. So the professor should pick any arbitrary sound mode to play.
+\end{sol}
+\end{document}
