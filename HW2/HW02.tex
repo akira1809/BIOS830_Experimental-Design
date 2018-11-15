@@ -1,0 +1,426 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW2}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Question $1$.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	We can use table $A.7$ here, but I prefer to use the `pwr' package in R to give a more accurate calculation. Either case we need to compute MSE as an approximation of $\sigma^2$ since $\sigma^2$ is not really given here (we do not have a pilot study).\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 10cm]{HW2Q1(a).jpg}
+	\end{center}
+	We found the power is $85\%(> \text{ the required }80\% )$ and hence the study is adequately powered.\vskip 2mm
+	For part $(b)$:\vskip 2mm
+	We can print out the result of our `aov' test in R and has the following result:
+	\begin{center}
+		\includegraphics[width = 10cm]{HW2Q1(b).jpg}
+	\end{center}
+	Our p value is $0.009<0.01<0.05$ and hence we reject $H_0$, i.e., we consider there is at least two treatment groups that shows statistically significant difference.\vskip 2mm
+	For part $(c)$:\vskip 2mm
+	Consider the 3 preplanned contrasts:
+	\begin{enumerate}
+		\item [(1)]Experimental drugs versus the standard treatment. So we are considering the average effect of the experimental drugs versus the standard treatment. Thus our contrast is $(c_1, c_2, c_3, c_4, c_5) = (1, -\frac{1}{4}, -\frac{1}{4}, -\frac{1}{4}, -\frac{1}{4})$
+		\item [(2)]Drug with niacin(drug $3$ and $5$) versus non-niacin containing drugs(drug $2$ and $4$) among only the experimental treatments(thus not including drug $1$). Thus our contrast is $(c_1, c_2, c_3, c_4, c_5) = (0, \frac{1}{2}, -\frac{1}{2}, \frac{1}{2}, -\frac{1}{2})$.
+		\item [(3)] Drugs with simvastatin(drug $4$ and $5$) versis non-simvastatin containing drugs (drug $2$ and $3$) among only the experimental treatments(thus not including drug $1$). Thus our contrast is $(0, \frac{1}{2}, \frac{1}{2}, -\frac{1}{2}, -\frac{1}{2})$
+	\end{enumerate}
+	Since the group number is not really big, also these are all pre-planned contrast, we choose to use Bonferroni method.\vskip 2mm
+	So the $95\%$ confidence interval follows the following general form:
+	\begin{align*}
+		\sum_ic_i\tau_i \in \Big(\sum_ic_i\bar{y}_{i\cdot} \pm w_B\sqrt{msE\sum c_i^2/r_i}\Big)
+	\end{align*}
+	where the critical coefficient is:
+	\begin{align*}
+		w_B = t_{n - v, \frac{\alpha}{2m}}
+	\end{align*}
+	after runninng the R code, we got the following output
+	\begin{center}
+		\includegraphics[width=12cm]{HW2Q1(c).jpg}
+	\end{center}
+	We interpret by order as the following:
+	\begin{enumerate}
+		\item [(1)] with $95\%$ confidence, the difference between the standard treatment and the experimental drugs is in the interval of $(-0.76, 5.75)$. Since it contains $0$, we fail to reject $H_0$.
+		\item [(2)] with $95\%$ confidence, the difference between the drugs with niacin and the drugs without is in the interval of $(-0.008, 5.813)$.  Since it also contains $0$, we fail to reject $H_0$.
+		\item [(3)] with $95\%$ confidence, the difference between drugs with simvastatin and the drugs without is  in the interval of $(-1.134, 4.688)$. Since it also contains $0$, we fails to reject $H_0$.
+	\end{enumerate}
+	part $(d)$:\vskip 2mm
+	Since we are interested in all pairwise comparisons here, we should use Tukey's Method, which is designed to optimize the result for this situation. It can provide the shortest confidence intervals than the others.\vskip 2mm
+	we compute the critical coefficient as the following:
+	\begin{align*}
+		w_T = \frac{q_{v, N - v, \alpha}}{\sqrt{2}} = \frac{q_{5, 95, 0.05}}{\sqrt{2}} \simeq 2.78
+	\end{align*}
+	We did not use Table $A.8$ since it does not give the case for when $\text{df} = N - v = 95$. Instead we used the $\text{qtukey}$ function in R.\vskip 2mm
+	For part $(e)$:\vskip 2mm
+	The overall experiment-wise error rate for the study across the two sets of contrasts $(c)$ and $(d)$ is $\alpha_c + \alpha_d = 0.05 + 0.05 = 0.1$.\vskip 2mm
+	To achieve an overall error rate as $\alpha = 0.05$, we need to adjust each of $\alpha_c$ and $\alpha_d$ such that their sum is $0.05$. For example, we can let the significance level in part $(c)$ as $\alpha_c  = 0.025$, and we re-run the code for part $(c)$ under the new $\alpha$ value. We got the following output:
+	\begin{center}
+		\includegraphics[width = 10cm]{HW2Q1(e).jpg}
+	\end{center}
+	As expected, since we lowered the significance level, we got wider confidence intervals than in $(c)$
+\end{sol}
+Question $2$.
+\begin{sol}
+	plug the model $Y_{ij} = \beta_0 + \beta_1X_{ij} + \epsilon_{ij}$ into the contrast $L$. Notice a few fact that:
+	\begin{align*}
+		E(\epsilon_{ij}| X_{ij} = 24, 28, 32, \text{ or }36) = E[\epsilon_{ij}] = 0 \text{ due to independence}
+	\end{align*}
+	also 
+	\begin{align*}
+		E[\beta_0|X_{ij}] &= \beta_0\\
+		E[\beta_1|X_{ij}] &=  \beta_1
+	\end{align*}
+	since $\beta_0, \beta_1$ are not viewed as random.\vskip 2mm
+	Hence we have:
+	\begin{align*}
+		L &= -3 E[\beta_0 + \beta_1X_{ij} + \epsilon_{ij}|X_{ij} = 24] - E[\beta_0 + \beta_1X_{ij} + \epsilon_{ij}|X_{ij} = 28] \ldots\\
+		&\ldots + E[\beta_0 + \beta_1X_{ij} + \epsilon_{ij}|X_{ij} = 32] + 3E[\beta_0 + \beta_1X_{ij} + \epsilon_{ij}|X_{ij} = 36]\\
+		&= \beta_0(-3-1+1+3) + \beta_1(-3\times 24 -28 + 32 + 3 \times 36)\\
+		&= 40\beta_1
+	\end{align*}
+	Thus testing on $L = 0$ is equivalent to testing on $\beta_1 = 0$
+\end{sol}
+Question $3$
+\begin{sol}
+	I am going to explain the idea/intuition here for the code attached:\vskip 2mm
+	The analysis breaks down to the following:
+	\begin{enumerate}
+		\item to compute sample size, we need to know number of treatment factors $v$, pre-specified significance level $\alpha$, the expected mean difference $\Delta$, empericial standard deviation $\sigma$, and a pre-specified power we call $1 - \beta$.
+		\item please allow me to borrow a graph from class here to see the relationship between the distributions of F-statistic under null and alternative hypothesis:\vskip 2mm
+		\begin{center}
+			\includegraphics[width = 10cm]{HW2Q3F.jpg}
+		\end{center}
+		so what we hope to happen is that, the minimal sample size will satisfy the following:
+		\begin{align*}
+		 	\text{CDF}^{-1}_{F_{v-1, \text{df}2, \lambda^2}}(\beta) = \text{CDF}^{-1}_{F_{v-1, \text{df}2}}(1 - \alpha)
+		\end{align*}
+		Here $\text{CDF}$ represent cumulative distribution function.  Or, in terms of R language, the equation above is equivalently translated as the following pseudo code:
+		\begin{align*}
+			pf(1 - power, v-1, \text{df}2, \lambda^2) = pf(1 - \alpha, v-1, \text{df}2)
+		\end{align*}
+		\item Notice that $\text{df}2$ and $\lambda^2$ are not independent to each other because they both depend on sample size $r \times v = n$ and are positively correlated to $n$. So we are looking for that exact $n$ (or $r$) such that the above equation holds and $\text{df}2$ does not contradict with $\lambda^2$ in terms of their function relatoinship with $n$.\vskip 2mm
+		\item thus the minimal sample size is the one satisfy the equation above (larger saple size will cause the equation becomes inequality $'>'$). 
+		\item the idea to sort out the solution is quite similar to Newton-Leibniz method or in general the interpolation method. (the book told us to start with $\text{df2} = 1000$).
+		\end{enumerate}
+		{\bf I am having a little issue with my code here.} 
+\end{sol}
+\vskip 2mm
+
+Question $4$.
+We do the simulation with the following courtesies:
+\begin{enumerate}
+	\item choose total sample size $N = 40$, and group sample size $(n_1, n_2)$ such that $n_1 + n_2 = 40$ and $n_1$ range from $2$ to $38$. The reason is that when computing the power in the pwr.t2n.test later on, we need each group with at least two sample points.
+	\item  while $n_1$ varies from $2$ to $38$, at each value of $n_1$ we use $rnorm$ to simulate from $N(3, 4)$ for group $1$ and $N(6, 4)$ for group $2$. The choice of mean and variance is relatively casual here but we need to guarantee the variance are the same for both group. If time allows we can even iterate on different choices of means and variances.
+	\item since this is simulation, theoretically we should {\bf NOT} directly plug in $\mu_1, \mu_2$ to compute effective size for later use. {\bf Nor} should we directly use $\sigma^2 = 4$. Instead, we should use the sample we generated to compute $\text{mSE}$ as an approximation of $\sigma^2$, and $\bar{y}_{1\cdot}$ and $\bar{y}_{2\cdot}$ as estimate of $\mu_1$ and $\mu_2$. However if we want to do it this way in the code, the error of the estimated mean and standard deviation can be a problem, leading to a biased calculation of the power. Thus it requires multiple times of simulation under same value of $(\mu_1, \mu_2, \sigma^2)$ and average out to get the best result. To save time though, in our real code, we count on the credit of rnorm itself and directly used $\mu_1, \mu_2$ and $\sigma^2$.
+	\item finally we implemete pwr.t2n.test for computing the power for each simulation, and print out at which choice of $n_1$ and $n_2$ we reach maximum power. Turns out it matches the expectation that we got max power at $n_1 = n_2  = 20$(we recorded all the values of power at different sample size and used whic.max function to acquire the size where max power is reached).\vskip 2mm
+	\item we also plot the trend of power as the sample size of the first group changes
+	\begin{center}
+		\includegraphics[width=10cm]{HW2Q4.jpg}
+	\end{center}
+\end{enumerate}
+Question $7$ of Chapter $4$.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	Since it is an individual contrast, we know the confidence interval is:
+	\begin{align*}
+		\sum_i c_i\tau_i \in \Big(\sum_i c_i\bar{y}_{i\cdot} \pm t_{n - v, \frac{\alpha}{2}}\sqrt{\text{msE}\Big(\sum_i\frac{c_i^2}{r_i}\Big)}\Big)
+	\end{align*}
+	while in our case, $r_i = 4$ for all $1 \leq i \leq v$ and $v = 3, \text{msE} = 0.0772$. Our contrast is: our contrast is $(c_1, c_2, c_3) = (1, -\frac{1}{2}, -\frac{1}{2})$. \vskip 2mm
+	Aslso there is:
+	\begin{align*}
+		\bar{y}_{1\cdot} = -0.0350, \bar{y}_{2\cdot} = 2.7000, \bar{y}_{3\cdot} = 1.9925
+	\end{align*}
+	Given $\alpha = 0.05$, we have according to Table $A.4$:
+	\begin{align*}
+		t_{12 - 3, 0.025} = t_{9, 0.025} = 2.262, 
+	\end{align*}
+	thus the $95\%$ confidence interval is:
+	\begin{align*}
+		\Big(-2.7661, -1.9964\Big)
+	\end{align*}
+	Please see R code for the realization of computation.\vskip 2mm
+	The upper bound of the interval is below $0$, and the distance to $0$ is also way greater than the estimated standard deviation. This can be translated as: on average the regular soap (first treatment) has dissolved way much less (lost much less weight) in the experiment than the other two soaps.\vskip 2mm
+	For part $(b)$:\vskip 2mm
+	Our hypothesis here is:
+	\begin{align*}
+		H_0: \tau_1 &= \frac{1}{2}(\tau_2 + \tau_3)\\
+		H_a: \tau_1 &\neq  \frac{1}{2}(\tau_2 + \tau_3)
+	\end{align*}
+	If we use the confidence interval from part $(a)$:\vskip 2mm
+	Since the upper bound of the confidence interval is less than $0$, and also the distance of the upper bound to $0$ is mulitple times larger than the estimated standard deviation (i.e., $1.9964 \gg  \sqrt{\text{mSE}} = 0.2778$), so we can conclude that the average weight loss of regular soap has at least $95\%$ chance being less than the average weight loss of the other two soaps. (i.e., we will reject the null hypothesis.)\vskip 2mm
+	If we use the hypothesis test theory mentioned in section $4.3$ to tackle this, we have:
+	\begin{align*}
+		\text{reject } H_0 \text{ if } \frac{\text{ssc}}{\text{msE}} = \frac{\Big(\sum_ic_i\bar{y}_{i\cdot}\Big)^2}{\text{msE}\sum c_i^2/r_i} > F_{1, n - v, \alpha}
+	\end{align*}
+	The left hand side of the inequality above turns out to be $195.87$ while $F_{1, 12 - 3, 0.05} = F_{1, 9, 0.05} = 5.12$.\vskip 2mm
+	Apparently $195.87 \gg 5.12$, so we reject $H_0$ here. The translation of this rejection is the same as the one above when we use confidence interval.\vskip 2mm
+	For part $(c)$:\vskip 2mm
+	Notice that for all these methods, the confidence interval assume the form of:
+	\begin{align*}
+		\sum c_i\tau_i \in \Big(\sum c_i\bar{y}_{i\cdot} \pm w\sqrt{\text{msE}\sum c_i^2/r_i}\Big)
+	\end{align*}
+	so to compare the lengths of the confidence intervals among different methods, we only need to compare $w$(critical coefficient).\vskip 2mm
+	Denote the $w$ value for Bonferroni, Tukey and Dunnett as $w_B, w_T$ and $w_D$. We have:
+	\begin{align*}
+		w_B &= t_{n - v, \alpha/(2m)} = t_{9, 0.01/4} = t_{9, 0.0025} = 3.690\\
+		w_T &= q_{v, n-v, \alpha}/\sqrt{2} = q_{3, 9, 0.01}/\sqrt{2} = 5.43/\sqrt{2} = 3.84\\
+		w_{D} &= |t|^{(0.5)}_{v - 1, n - v, \alpha} = |t|^{(0.5)}_{2, 9, 0.01} = 3.63
+	\end{align*}
+	Apparently $w_D < w_B < w_T$ in this case, so none of Bonferroni or Tukey methods gives shorter interval than Dunnett methods here (which meets our expectation since Dunnett method is designed specifically for treatment-versus-control contrasts).\vskip 2mm
+	For part $(d)$:\vskip 2mm
+	Dunnett method is only designed for treatment-versus-control contrasts. If we require all pairwise contrasts to be considered, it is not available anymore.\vskip 2mm
+	Theoretically, Tukey is the best for pairwise contrasts. However we do not really have too many contrasts here, so we want to be careful. Bonferroni should be considered, so should Scheffe. (we do not need to consider Hsu here because we are not trying to tell which soap is better.) \vskip 2mm
+	Now our contrasts are $\tau_1 - \tau_2, \tau_1 - \tau_3$ and $\tau_3 - \tau_2$, so $m = 3$ in Bonferroni. Denote $w_S$ as the critical coefficients in Scheffe method, we have then:
+	\begin{align*}
+		w_B &=t_{n - v, \alpha/2m} = t_{9, 0.01/6} = t_{9, 0.001667} = 3.954 \\
+		w_S &=  \sqrt{(v - 1)F_{v - 1, n - v, \alpha}} = \sqrt{2\cdot F_{2, 9, 0.01}} = 4.005\\
+		w_T &= 3.84 (\text{did not change})
+	\end{align*}
+	So Tukey method gives the shortest confidence intervals (see R code):
+	\begin{align*}
+		\tau_1 - \tau_2 &\in \Big(-3.4890, -1.9810\Big)\\
+		\tau_1 - \tau_3 &\in \Big(-2.7815, -1.2735\Big)\\
+		\tau_3 - \tau_2 &\in \Big(-1.4615, 0.0465\Big)\\
+	\end{align*}
+	The Tukey's confidence interval did not really change compared to part $(c)$ since it does not depends on the number of contrasts.\vskip 2mm
+	However the interval of Bonferroni gets longer (notice that $w_B$ is larger than in $(c)$) since $m$ went from $2$ to $3$.
+\end{sol}
+Question $2.$ of Chapter $5.$
+\begin{sol}
+	To check the assumptions on the one-way ANOVA model(model diagnostic) for the soap experiment, we need to check the following assumptions one by one and in order:
+	\begin{enumerate}
+		\item [(1)] check the fit of the model
+		\item [(2)] check for outliers of the data
+		\item [(3)] check for independence
+		\item [(4)] check for homoscedasticity(constance of variance)
+		\item [(5)] check for normality
+	\end{enumerate}
+	{\bf Please see attached R code for this question for any generated graph or numeric result.}\vskip 2mm
+	To check $(1)$ the fit of the model, we sketch the standardized residual against the treatment groups:\vskip 2mm
+	\begin{center}
+		\includegraphics[width=10cm]{Ch5Q2stdresFactor.jpg}
+	\end{center}
+	Overall we have $5$ (about one half) points above $0$ and $7$(about one half) points below. So we can roughly say it is evenly distributed around $0$. (which is what we need in order to claim that the model fits). However we do notice that in group $1$ and group $3$ the majority of the points are below the level of $0$, and in gorup $2$ majority of the points are above. Consider we do not really have a large sample size here, so it is farily hard to immediately conclude a lack of fit. In fact with only $4$ points in each group, it is farily hard to get exact $2$ points above and $2$ points below the level of $0$, so we trust our judgement on fit of the model based on the overall (cross group) scattering of the standardized residuals.\vskip 2mm
+	To check $(2)$ the outliers, there are $3$ points (number $4$, $7$ and $8$) marked as potential outliers because they fall out of the range of $(-1, 1)$. Consider the rest $9$ out of $12$ residuals ($75\%$, which $> 68\%$) stay within $(-1, 1)$ and all $12$ residuals stay within $(-2, 2)$, we believe the outliers are not many enough to turn any of our model assumptions.\vskip 2mm
+	To check $(3)$ the independence, we need have the information for the order in time or space when collecting the data which is not provided here, so we can not really check it. But the description of the experiment gives us the intuition that if the minor source of variation is well controlled (for example, temperatue etc) we should not be worried about the independence issue.\vskip 2mm
+	To check $(4)$ the constance of variance, since our sample size is small here, it is fairly hard to observe from any graph (for example, standardized residuals against fitted value) to see if there is any trend (for example, megaphone shaped plot). However we can use the rule of thumb to check:
+	\begin{align*}
+		\frac{s^2_{\max}}{s^2_{\min}} = \frac{s^2_{2}}{s^2_{3}} = \frac{0.09986}{0.03736} = 2.67 < 3
+	\end{align*}
+	So the rule of thumb support the assumption that the model has constant variance cross the groups.\vskip 2mm
+	To check $(5)$ the normality, we can use the QQ-plot for standardized residuals against the normal scores:\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 10cm]{Ch5Q2QQ.jpg}
+	\end{center}
+	It is generally difficult to judge the usefulness of normality plot if the sample size is under $15$, which is our case here. (we only have $12$). Even the normality is satisfied, the qq plot can fail to display linear relationship under small sample size. For our case, our small sample size display a farily linear relatoinship on qq plot except the $3$ outliers marked out. So we believe this is a good support for the normality assumption.\vskip 2mm
+	To conclude overall, we checked step by step all the necessary assumptions and decide to keep the ANOVA model assumed here.
+\end{sol}
+Question $3$ of Chapter $5$:
+\begin{sol}
+	{\bf any numeric result and generated graph here should be referred to the attached R code}\vskip 2mm
+	For part $(a)$:\vskip 2mm
+	To check for constant variance, first look at the group of $\sqrt{|\text{standardized residuals}|} \text{ vs fitted values}$\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 10cm]{Ch5Q3stdresfit.jpg}
+	\end{center}
+	it appears that the variance of the residuals increase as the fitted values increase.\vskip 2mm
+	We then check the rule of thumb:
+	\begin{align*}
+		\frac{s^2_{\max}}{s^2_{\min}} = \frac{s^2_{2}}{s^2_{3}} = \frac{75.93333}{18.26667} = 4.1022 >3
+	\end{align*}
+	which also support the judgement that there is non-equal variance among the groups.\vskip 2mm
+	To see if we can potentially transform the data, we check the relationship between $\log(s^2_i)$ and $\log(\bar{y}_i)$:\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 10cm]{Ch5Q3Trans.jpg}
+	\end{center}
+	we can roughly fit them linearly. check the R code and look at the output of our linear regression $\text{ reg}1$, we got:
+	\begin{align*}
+		\log(s_i^2) \simeq 4.068\log(\bar{y}_i^2) - 17.761
+	\end{align*}
+	So we have an estimate of $q = 4.068$. Since $q \neq 2$, we need to use the following transformation:
+	\begin{align*}
+		h(y_{it}) = (y_{it})^{1 - \frac{q}{2}} = (y_{it})^{1 - 2.034} =  (y_{it})^{-1.034} \simeq y_{it}^{-1} = \frac{1}{y_{it}}
+	\end{align*}
+	Now we recheck all assumptions:\vskip 2mm
+	To check $(1)$ fit of model:\vskip 2mm
+	See the following graph for new standardized residuals against treatment factors:\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 10cm]{Ch5Q3Hstdresfactor.jpg}
+	\end{center}
+	the sample points are randomly located around $0$ as indicated by the horizontal redline. So it supports the fitness of model.\vskip 2mm
+	To check $(2)$ for outliers:\vskip 2mm
+	from the same graph above, out of $40$ samples above we only have 3 outliers(sapmle number $1$, $33$ and $36$) that reaches the boundary of $[-2, 2]$, so no strong evidence from the outliers go against our model assumptions.\vskip 2mm
+	To check $(3)$ for independence of error terms:\vskip 2mm
+	let's look at the graph for after the transformation, the standardized residuals against the observation time (since it is told that the data is given in the order of observation time).\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 8cm]{Ch5Q3HIndependence.jpg}
+	\end{center}
+	We also draw the regression line between the residual and the time we found that the line is almost horizontal, and this means there is no obvious trend relationship between the standardized residuals and the observation time, which supports the assumption of independence.\vskip 2mm
+	To check $(4)$ for constant variance, we can use rule of thum again. For the transformed data, we have: (see R code for the variable ``hwithinStats''):
+	\begin{align*}
+		\frac{s^2_{\max}}{s^2_{\min}} = \frac{s^2_{\text{butter}}}{s^2_{\text{magarine }3}} = \frac{3.7671 \times 10^{-8}}{2.1217 \times 10^{-8}} = 1.78 < 3
+	\end{align*}
+	which supports the assumption of constant variance among groups.\vskip 2mm
+	Finally to check $(5)$ for normality, we can look at the qq plot:\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 10cm]{Ch5Q3HQQ.jpg}
+	\end{center}
+	The standardized residuals is linearly arranged with respect to the normal scores, except for a handful of points, which is a good indication for normality.\vskip 2mm
+	Overall to summarize for part $(a)$: after the data transformation, we find that the model assumptions are all satisfied.\vskip 2mm
+	For part $(b)$:\vskip 2mm
+	we have a contrasts here between the butter and the overall average of margarines. So the contrast here is:\vskip 2mm
+	\begin{align*}
+		(c_1, c_2, c_3, c_4) = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3}, -1)
+	\end{align*}
+	It is only an individual contrast, so our confidence interval follows the following formula:
+	\begin{align*}
+		\sum_i c_i\tau_i \in \Big(\sum_ic_i\bar{y}_{i\cdot} \pm t_{n - v, \alpha/2}\sqrt{\text{msE}\sum_ic_i^2/r_i}\Big)
+	\end{align*}
+	So we get the confidence interval at $95\%$ level as:
+	\begin{align*}
+		\Big(0.0003168, 0.0005669\Big)
+	\end{align*}
+	For translation of the confidence interval above, remember that we are looking at the transformed data $\frac{1}{y_{it}}$, so having a positive lower bound means that, the average reciprocal effect of the three magarines are larger than the average reciprocal effect of better, and hence the average melting time of the three magarines are shorter than the average melting time of butter.
+	For part $(c)$: \vskip 2mm
+	Using the ``Satterthwaite's approximation'', our estimated variance of the contrast is:
+	\begin{align*}
+		\hat{\text{Var}}(\sum c_i\hat{\tau}_i) = \sum\frac{c_i^2}{r_i}s^2_i
+	\end{align*}
+	with degree of freedom
+	\begin{align*}
+		\text{ df } &= \frac{(\sum c_i^2s_i^2/r_i)^2}{\sum\frac{(c_i^2s_i^2/r_i)^2}{(r_i - 1)}}
+	\end{align*}
+	and the confidence interval is:
+	\begin{align*}
+		\sum c_i\tau_i \in \Big(\sum c_i\bar{y}_{i\cdot} \pm t_{\text{df }, \alpha/2}\sqrt{\hat{\text{Var}}(\sum c_i\hat{\tau}_i)}\Big)
+	\end{align*}
+	we run the R code for this part, got the confidence interval with Satterthwaite's approximation as:
+	\begin{align*}
+		\text{CI}_{\text{Satterthwaite}} = \Big(-19.76, -7.11\Big)
+	\end{align*}
+	This translates to the conclusion that the average melting time for the three magarines are shorter than the average melting time of butter, which is consistent with our conclusion above by using transformed data.\vskip 2mm
+	For part $(d)$:\vskip 2mm
+	Since both methods get same conclusions, we would prefer to use the original data instead of the transformed one. (the transformed data does not help much here).
+\end{sol}
+Chapter $5$ Question $8$.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	We check the following two graphs:
+	\begin{enumerate}
+		\item [(1)] The square root of standardized residuals against the fitted value
+		\item [(2)] The standardized residuals against treatment levels
+	\end{enumerate}
+	\begin{center}
+		\includegraphics[width=6cm]{Ch5Q8stdresfit.jpg}
+		\includegraphics[width=6cm]{Ch5Q8stdresfactor.jpg}
+	\end{center}
+	From first graph, we see that there seem to be a down and up trend of the standardized residuals as the fitted values increase. From the second graph, apparently there seem to be a decreased group varaince from group $1$ to group $4$.\vskip 2mm
+	Both support the judgement that we do not have a constant variance among the groups.\vskip 2mm
+	If we use rule of thumbs, we can check:
+	\begin{align*}
+		\frac{s^2_{\max}}{s^2_{\min}} = \frac{s^2_1}{s^2_3} = \frac{48.93}{2.67} = 18.33 \gg 3
+	\end{align*}
+	which also indicates the non-equal variance among the groups\vskip 2mm
+	\vskip 2mm
+	For part $(b)$:\vskip 2mm
+	with the binomail distribution on $Y_{it}$, the transformed data should be:
+	\begin{align*}
+		h_{y_{it}} = \arcsin(\sqrt{y_{it}/m}), \hskip 2mm m = 20
+	\end{align*}
+	After the transform, we have:
+	\begin{align*}
+		\frac{s^2_{\max}}{s^2_{\min}} = \frac{s^2_1}{s^2_3} = \frac{0.2163}{0.0100}=  21.63 \gg 3 
+	\end{align*}
+	It seems that we still have unequal variance among groups.\vskip 2mm
+	For part $(c)$:\vskip 2mm
+	We plot $\log(s^2_i)$ against $\log(\bar{y}_{i\cdot})$ and get the following:
+	\begin{center}
+		\includegraphics[width = 10cm]{Ch5Q8TRANS.jpg}
+	\end{center}
+	It does not seem like the points are really matching well with the regression line. We read from $R$ code output on the variable ``Reg 1'' to get $q = 1.1839$. Since $q\neq 2$, we need to use $h_{y_{it}} = (y_{it})^{1 - \frac{q}{2}}$, in this case 
+	\begin{align*}
+		h_{y_{it}} = (y_{it})^{1 - 0.5920} \simeq (y_{it})^{0.4}
+	\end{align*} 
+	after the transfrmation we check assumption again:
+	\begin{center}
+		\includegraphics[width = 6cm]{Ch5Q8tstdresfit.jpg}
+		\includegraphics[width = 6cm]{Ch5Q8tstdresfactor.jpg}
+	\end{center}
+	from the graph we still see down and up trend of the standardized residual against fitted values, and also the difference on variance among factor groups.\vskip 2mm
+	Also if we ues rule of thumbs:
+	\begin{align*}
+		\frac{s^2_{\max}}{s^2_{\min}} = \frac{s^2_{1}}{s^2_{3}} = \frac{1.4374}{0.0751} = 19.1 \gg 3
+	\end{align*}
+	We are still ont expecting equal variance here.\vskip 2mm
+	For part $(d)$:\vskip 2mm
+	To construct the $95\%$ confidence intervals using Shceffe's method and in conjunction with Satterthwaite's approximation, our confidence interval assumes the general form of :
+	\begin{align*}
+		\sum c_i\tau_i \in \Big(\sum c_i\hat{\tau}_i \pm w\sqrt{\sum\frac{c_i^2}{r_i}s_i^2}\Big)
+	\end{align*}
+	however unlike the usual Satterthwaite's approximation, it is in conjunction with Shceffe's method, so we should have:
+	\begin{align*}
+		w = \sqrt{(v - 1)F_{v - 1, \text{df}, \alpha}}
+	\end{align*}
+	with the degree of freedom as:
+	\begin{align*}
+		\text{ df } = \frac{\Big(\sum \frac{c_i^2s_i^2}{r_i}\Big)^2}{\sum \frac{(c_i^2s_i^2/r_i)^2}{r_i - 1}}
+	\end{align*}
+	We screen shot our result from R here:\vskip 2mm
+	\begin{center}
+		\includegraphics[width = 12cm]{Ch5Q8(d).jpg}
+	\end{center}
+\end{sol}
+\end{document}
