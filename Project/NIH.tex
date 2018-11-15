@@ -1,0 +1,178 @@
+%% For NIH grant application %%
+%% July 2010 %%
+%% Tatsuki Koyama %%
+
+\documentclass[11pt]{article}  %11 or 12 pt
+
+% Packages some may find useful.
+% \usepackage{graphicx,epsf,psfig,pstricks,subfigure,psfrag,rotating}
+
+% New NIH specifications
+% font = Arial, Helvetica, Palatino Linotype, or Georgia typeface
+% font size 11 or larger
+% margin = at least one-half inch
+% Use at least one-half inch margins for all pages.  
+% No information should appear in the margins, including the PI's name and page numbers.
+
+\renewcommand{\rmdefault}{phv} % Arial
+\renewcommand{\sfdefault}{phv} % Arial
+
+\usepackage[width=7.0in, height=9.5in, head=0.0in, foot=0.0in, headsep=0.0in]{geometry}
+%% This controls margins.  Can't go over width=7.5in, height=10.0in.  
+%% top-bottom margins = (11-height)/2  left-right margins = (8.5-width)/2
+
+\usepackage{setspace} % useful in changing vertical spacing temporarily.
+
+\usepackage{natbib} % more control over how references appear within text.
+\bibpunct{[}{]}{,}{n}{}{} % like so.
+%% use \citep{ref} instead of \cite{ref} in text.
+
+\usepackage{sectsty} % can change font, size of the section headings.  
+\sectionfont      {\fontsize{12pt}{3}\usefont{OT1}{phv}{b}{sc}\selectfont}
+\subsectionfont   {\fontsize{11pt}{3}\usefont{OT1}{phv}{b}{n}\selectfont}
+\subsubsectionfont{\fontsize{11pt}{3}\usefont{OT1}{phv}{m}{n}\selectfont}
+
+\renewcommand{\thesection}{\Alph{section}} % so that section headings use A B C instead 1 2 3
+\renewcommand{\baselinestretch}{1}
+
+\renewcommand\refname{\section{Literature Cited} \vspace{-1em}} 
+%% This changes ``Reference'' to ``Literature Cited''.  
+
+\newcommand{\inden}[1]{\mbox{} \hspace{#1} } % Force horizontal spaces.  
+
+% -- % -- % -- % -- % -- %
+% -- % -- % -- % -- % -- %
+\begin{document}
+\pagestyle{empty}
+
+% -- % -- % -- % -- % -- %
+% -- % -- % -- % -- % -- %
+
+%\section{Introduction of my plan (no such section in my formal project)}
+%
+%This document serves as a template for my project. The formal start of the project will be from the `Specific Aims' section.
+%
+%My project topic will be about weight loss. As for now I do not have a well formed design yet, but I am interested in designing a study to understand the contributing factors of weight loss, for example, diet, exercise, sleep and so on, and how to take control of these factors efficiently to reach the weight loss goal fast and safe. This is a problem worth the effort since overweight is obviously an issue that impacts our daily life more generally than we thought it does. In fact as of 2009-2010, data from the National Health and Nutritoin Examination Survey shows that more than two thirds adults are considered to be overweight or obese, and more than one third adults are considered to be obese.
+%
+%The following sections gives a guidline of how I should compose my proposal for the study, and specific details will be given in my final report.
+
+\section{Specific Aims}
+
+%State concisely the goals of the proposed research and summarize the expected outcome(s), 
+%including the impact that the results of the proposed research will exert on the research field(s) involved.
+%
+%List succinctly the specific objectives of the research proposed, e.g., to test a stated hypothesis, 
+%create a novel design, solve a specific problem, challenge an existing paradigm or clinical practice, 
+%address a critical barrier to progress in the field, or develop new technology.
+%
+%Specific Aims are limited to one page.
+
+The prevalence of a body-mass index (BMI; the weight in kilograms divided by the square of the height in meters) at the 95th percentile or higher among children between the ages of $6$ and $11$ years increased from $4.2\%$ in $1963-1965$ to $15.3\%$ in $1999-2000$[1]. Based on national survey data(National Health and Nutrition Examination Study) collected between $1970$s and $2004$, the increase(percentage points) in obesity and overweight in adults was faster than in children ($0.77$ vs. $0.46-0.49$), and in women than in men ($0.91$ vs $0.65$)[3]. If these trends continue, by $2030$, $86.3\%$ adults will be overweight or obese; and $51.1\%$, obese[3]. The total health-care costs attributable to obesity/overweight would double every decade to $860.7-956.9$ billion US dollars by $2030$, accounting for $16-18\%$ of total US health-care costs[3].\\
+The World Health Organization (WHO) defines obesity as an `abnormal or excessive fat accumulation that may impair health', and states that `the fundamental cause of obesity and overweight is an energy imbalance between calories consumed and calories expended'[4]. Most public health stratigies aiming to tackle obesity are based on this concept, i.e. they aim to decrease caloric consumption, to increase calories expended or ideally a combination of both[2]. The `energy imbalance' concept assumes that a positive energy balance results in fat mass, and individuals aiming to prevent weight gain should avoid a positive balance[2]. Dietary guidlines commonly suggest the calories deficiet needs to be in the range of $500-750$ kilocalories(kcals) per day for an adult to lose weight[2, 5]. This value is based on the `3500 kcal rule', also known as the `Wishnofsky rule'[2, 6], which is still used as the basis for some guidlines, publications and nutrition textbooks[2, 7], despite its inaccuracy and very limited effectiveness[2, 8]. The recommended deficit tacitly assumes `that a calorie is a calorie' independently of its source[2, 9], hence ignoring the second rule of thermodynamics[2]. When the different values of catabolism-induced thermogenesis are considered for each macronutrient[2, 10], `a calorie is a calorie' may no longer hold true, but probably many among the common population and even some nutrition professionals ignore this[7, 11]. By consequence, inacurate assessments and recommendations for weight management may result[2]. For example, restricting energy in take to $2000$ cal per day[5], if the resulting diet consists only of industrialized food (i.e. Products made from processed substances, extracted or refined from whole foods... They are very durable, palatable, and ready to consume...They are typically energy-dense, have a high glycemic load, are low in dietary fibers, micronutrients, and phytochemicals, and are high in unhealthy types of diatary fat, free sugars, and sodium[2, 12].), may result in an overload of nutrients correlated with development of obesity and a lack of essential nutrients and micronutrients known to act against obesity[13]. Without discriminating the source of calories, reducing the calorie intake usually results in a short phase of rapid weight loss, although the loss is not necessarily one of accumulated fat, but rather of fat-free mass[2, 14]. Given that the main problem in obesity is, however, accumulated fat, losing any mass other than fat may be unproductive and not desirable.\\
+% -- % -- % -- % -- % -- %
+\textbf{Specific Aim: The main aim of this proposal is to develope an effective plan for dealing with obesity/overweight issue among adults. We will try to answer the following questions:}\\
+\inden{2em} A.1: given the same amount of calorie in take per day, how does carbohydrate levels in diet impact weight loss and fat loss.\\
+\inden{2em}A.2: given the same amount of calorie consumption per day, how does different exercise  impact weight loss and fat loss.\\
+\inden{2em} A.3: Is there any interaction between the diet and exercise.
+
+% -- % -- % -- % -- % -- %
+%\subsection{Specific Aim 2: Develop more amazing things.}
+%This and that
+
+% -- % -- % -- % -- % -- %
+%\newpage
+%\section{Research Strategy}
+%Organize the Research Strategy in the specified order and using the instructions provided below. 
+%Start each section with the appropriate section heading . Significance, Innovation, Approach. 
+%Cite published experimental details in the Research Strategy section and provide the full reference 
+%in the Bibliography and References Cited section.
+
+% -- % -- % -- % -- % -- %
+\section{Significance}
+Most anti-obesity programs are based on the concept of energy balance[15, 16].Possibly as a result, within certain populations, the bigger the average BMI the higher is the prevalence of dieters or exercisers[17]. However, the obesity epidemic continues to grow worldwide, and under the current trends, the chance to reverse it is virtually zero[18].If apparently people and governments do what they are supposed to do do tackle the epidemic, but only isolated and not sustained results are achieved[19, 20], it may be possible that the symptoms are being treated instead of the roots[21]. The use of energy balance concept have certain advantages, e.g. it is easy to understand, it has a straightforward logic, it creates awareness on food consumption and it can reinforce discipline[2]. `Eat less, move more' appears as the most feasible solution to overweight and obesity and both possibilities seem to be within people's reach[22]. The solution gives the impression of being so simple and straightofrward that presumably all that are needed are willingness and self-control. Failing to revert obesity or overweight may be interpreted as lack of character, as one study has shown[23]. Thus the energy balance concept may lead to blame and even stigmatize people with these conditions, e.g. punishments such as imposing a special tax on people with overweight and obesity using airplanes are already being discussed in both academia and mass media[24, 25]. However, it may be ethically doubtful to attribute full responsibility to people with obesity and overweight, when individuals do not have full control over their food availability or accessibility[26, 27].\\
+In summary, the energy(calorie) balance concept may lead to misperception that total calorie intake is more important than the source of the calories and nutrient balance. Therefore, an individual trying to lose weight may become vulnerable to malnutrition when focusing only on caloreis[2]. There are also barriers to assessing physical activity. The first one is the lack of standardized definitions of its levels, i.e. moderate, intermediate or vigorous intensity[2]. Every level implies a different energy expenditure that also depends on ohter factors such as duration, body size and age. Hence it is difficult to agree on which kind of physical activity should be recommended for effective weight contorl[28]. \textbf{Thus there is a critical need to experiment on the effect of different levels of exercise and diet on the weight and fat loss.}
+% -- % -- % -- % -- % -- %
+%\begin{itemize}
+%\item Explain the importance of the problem or critical barrier to progress in the field 
+%that the proposed project addresses.
+%\item Explain how the proposed project will improve scientific knowledge, technical capability, 
+%and/or clinical practice in one or more broad fields.
+%\item Describe how the concepts, methods, technologies, treatments, services, 
+%or preventative interventions that drive this field will be changed if the proposed aims are achieved. 
+%\end{itemize}
+
+% -- % -- % -- % -- % -- %
+\section{Innovation}
+The most innovative aspect of this work is using the ratio between fat percentage loss and the BMI decrease as one of our responses. A higher ratio indicates a more effective achievement of the plan. Meanwhile we do look at the fat percentage loss and BMI reduction separately for references, any significant reduction on the above two may indicate som effectiveness of the treatment. So we will be looking at three linear models with different responses, but with similar/same designs.\\
+Based on the results, we may further refine our methodology. This proposal is still based on the energy(calorie) balance concept, with in-depth refinement of the treatment factors. We may further pursuit a different approach by emphasizing the effect of food on the metabolism and hormonal imbalance, as is suggested by [2]. However it is necessary to do our work here first in order not to miss out.
+% -- % -- % -- % -- % -- %
+%\begin{itemize}
+%\item Explain how the application challenges and seeks to shift current research or clinical practice paradigms.
+%\item Describe any novel theoretical concepts, approaches or methodologies, instrumentation or interventions 
+%to be developed or used, and any advantage over existing methodologies, instrumentation, or interventions.
+%\item Explain any refinements, improvements, or new applications of theoretical concepts, 
+%approaches or methodologies, instrumentation, or interventions.
+%\end{itemize}
+
+% -- % -- % -- % -- % -- %
+\section{Approach}
+\textbf{objective: }The objectives of the experiment is as mentioned in the \textbf{Aim} section. We will recruit patient volunteers from KUMC who suffer from overweight/obese as our experimental units(for pilot study at least. If possible we would like to run a larger experiment across different centers/areas). \\
+\textbf{treatment factors: }We have two treatment factors here, one is the exercies programs, with levels as high-intensity interval training program(HIIT, level 1), endurance training program(level 2) and hypertrophy training program(level 3). The exercise program is conducted on a daily base (not including weekends) for a period of 3 months and we control the daily calorie burning to the same amount among different levels on each experimental unit.\\
+The other treatment factor is diet, with levels as high-carb diet(level 1), medium-carb diet(level 2) and low-carb diet(level 3). Like the exercise program, we also control the calorie in-take to the same amount among different levels on each experimenal unit. By doing this we are hoping to approch same amount of daily calorie deficit for different units. However there is definitely noise existing when it comes to measurements, and also we have no control over the subjects over the weekend.\\
+\textbf{blocking factor and covariate: }We also include a blocking factor based on the age range(age $18-25$, $26-40$, $40-60$, and $60+$) and a covariate per sleeping hour. The reason to block the design here is that people within different age range have different metabolism rate, which will make a difference on fat burning given the same amount of diet and exercises. Sleeping hour is a covariate since during sleep human has much lower metabolism rate. Overall we are looking at an ANCOVA block-treatmnet design with two treatment factors. The recruited volunteers within each block(age range) would be randomly assigned to different treatment factors (exercise and diet program), and we aim to recruit enough many so we can have a complete block design.\\
+\textbf{measurement of responses: }Our responses are the change of the following quantities by the end of the program: i) body mass index(BMI); ii)fat percentage; iii) ratio of ii) over i).  We hypothesis that the treatment factors gives no significat difference to each of the three responses(\textbf{Aim 1, 2}), based on the energy(calorie) balance concept. We may also derive $95\%$ confidence intervals for the pairwise contrast to help with seeing which treatment combination are most effective (highest reduction on BMI, fat percentage, or/and the ratio.) Of course we may want to first test if there is any interaction between our two treatment factors (\textbf{Aim 3}). \\
+\textbf{analysis of the model: }We will carry out these analysis using the open-source statistical programming language R version 3.3.3(https://cran.r-project.org/). For assessment of the effectiveness of treatment factors, we will be looking at the ANCOVA(ANOVA) table, and for the confidence interval, we will use Tukey's method for the pairwise contrast.\\
+\textbf{sample size and power: }To make it a randomized complete block design, we need a minimum of $3 \times 3 = 9$ volunteers within each age range, which will make a total of $9 \times 4 = 36$ patients. However to ensure our study have enough power, we need to further consult with medical specialist on the effect size of BMI difference, the fat percentage difference and the ratio difference.\\
+\textbf{experimental challenges: }We are looking at a daily commitment from the volunteers for up to 3 months, so there is likely to be drop outs. Meanwhile, how to measure as precisely as possible on our responses can be a challenge, and the covariate(sleeping hour) may not be able to stay regular for one subject. Also, we have overlooked the other factors that might make a difference, for example, gender, race(possible genetic difference on the reaction to diets) and so forth, and we are not dealing with children's case in this design. We may want to take these into consideration in future studies.
+% -- % -- % -- % -- % -- %
+%\begin{itemize}
+%\item Describe the overall strategy, methodology, and analyses to be used to accomplish the specific aims of the project. 
+%Unless addressed separately in Item 15 (Resource Sharing Plan), include how the data will be collected, analyzed, 
+%and interpreted as well as any resource sharing plans as appropriate.
+%\item Discuss potential problems, alternative strategies, and benchmarks for success anticipated to achieve the aims.
+%\item If the project is in the early stages of development, describe any strategy to establish feasibility, 
+%and address the management of any high risk aspects of the proposed work.
+%\item Point out any procedures, situations, or materials that may be hazardous to personnel and precautions to be exercised. 
+%A full discussion on the use of Select Agents should appear in Item 11, below. 
+%\end{itemize}
+
+\begin{description}
+%\item[1] \textbf{Hrabe J, Hrabetova S, Segeth K (2004).}  A model 
+%  of effective diffusion and tortuosity in the extracellular space 
+%  of the brain.  \textit{Biophys J} 87:1606--1617.
+  \item[1] \textbf{Solveig A. Cunningham, Ph.D., Michael R. Kramer, Ph.D., and K.M. Venkat Narayan, M.D.} Incidence of Childhood Obesity in the United States. \textit{N Engl J Med} 2014; 370: 403-411.
+  \item[2] \textbf{Slavador Camacho, and Andreas Ruppel.} Is the calorie concept a real solution to the obesity epidemic? \textit{Global Health Action} 2017; Vol. 10: 1289650.
+  \item[3] \textbf{Youfa Wang, May A. Beydoun, Lan Liang, Benjamin Caballero, and Shiriki K. Kumanyika.} Will All Americans Become Overweight or Obese? Estimating the Progression and Cost of the US Obesity Epidemic. \textit{The Obesity Society} 2008; Vol 16, Issue 10: 2323-2330.
+  \item[4] \textbf{WHO.} Obesity and overweight [Internet]. WHO. 2014 [cited 2014 Oct 27].\\ \textit{available from: http://www.who.int/mediacentre/factsheets/fs311/en/}
+  \item[5] \textbf{Jensen MD, Ryan Dh, Apovian CM, et al.} Guidline for the management of overweight and obesity in adults.  \textit{Journal of the American College of Cardiology.} 2013; Vol 63, Issue 25: 2985-3023
+  \item[6] \textbf{Wishnofsky M.} Caloric equivalents of gained or lost weight. \textit{Am J Clin Nutr.} 1958; 6: 542-546.
+  \item[7] \textbf{Thomas DM, Martin CK, Lettieri S, et al.} Can a weight loss of one pound a week be achieved with a 3500-kcal deficit? \textit{Int J Obes.} 2013; 37: 1611-1613.
+  \item[8] \textbf{Thomas DM, Gonzalez MC, Pereira AZ, et al.} Time to correctly predict the amount of weight loss with dieting. \textit{J Acad Nutr Diet.} 2014 Jun; 114: 857-861.
+  \item[9] \textbf{Feinman RD, Fine EJ.} ``A calorie is a calorie'' violates the second law of thermodynamics. \textit{Nutr J.} 2004; 3:1.
+  \item[10]\textbf{J\'{e}quier E.} Pathways to obesity. \textit{Nature [Internet].} 2002 Aug 14; 26.
+  \item[11]\textbf{Chaput J-P, Ferraro ZM, Prud'homme D, et al.} Widespread misconceptions about obesity. \textit{Can Fam Physician.} 2014 Nov 1; 60:973-975.
+  \item[12]\textbf{Moodie R, Stuckler D, Monteiro C, et al.} Profits and pandemics: prevention of harmful effects of tobacco, alcohol, and ultra-processed food and drink industries. \textit{Lancet.} 2013 Mar 1; 381:670-679.
+  \item[13]\textbf{Mink M, Evans A, Moore CG, et al.} Nutritional imbalance endorsed by televised food advertisements. \textit{J Am Diet Assoc.} 2010 Jun; 110:904-910.
+  \item[14]\textbf{Heymsfield SB, Thomas D, Martin CK, et al.} Energy content of weight loss: kinetic features during voluntary caloric restriction. \textit{Metabolism.} 2012; 61:937-943.
+  \item[15]\textbf{Cismaru M, Lavack AM.} Social marketing campaigns aimed at preventing and controlling obesity: a review and recommendations. \textit{Int Rev Public Non Profit mark.} 2007; 4:9-30.
+  \item[16]\textbf{Vallg\r{a}rda S.} Governing obesity policies from England, France, Germany and Scotland. \textit{Soc Sci Med.} 2015 Dec; 147:317-323.
+  \item[17]\textbf{Montani J-P, Schutz Y, Dulloo AG.} Dieting and weight cycling as risk factors for cardiometabolic diseases: who is really at risk? \textit{Obes Rev.}2015 Feb; 1:7-18.
+  \item[18]\textbf{NCD Risk Factor Collaboration.} Trends in adult body-mass index in $200$ countries from $1975$ to $2014$: a pooled analysis of $1698$ populatoin-based measurement studies with $19.2$ million participants. \textit{Lancet.} $2016$ Apr; 387:1377-1396.
+  \item[19]\textbf{Dietz WH, Baur LA, Hall K, et al.} Management of obesity: improvement of health-care training and systems for prevention and care. \textit{Lancet}. 2015 April 14; 385:2521-2533
+  \item[20]\textbf{Cohen E, Cragg M, deFonseka J, et al.} Statistical review of US macronutrient consumption data, 1965-2011: Americans have been following dietary guidlines, coincident with the rise in obesity. \textit{Nutrition.} 2015 May; 31: 727-732.
+  \item[21]\textbf{Taubes G.} Why we get fat: and what to do about it. \textit{Reprint ed. New York: Anchor Publishers;} 2010. 288 p.
+  \item[22]\textbf{Guth E.} Healthy weight loss. \textit{JAMA.} 2014; 312:974.
+  \item[23]\textbf[{Balko R, Brownell K, Nestle M.} America's obesity crisis: are you responsible for your own weight? \textit{Time} 2016: Apr 22.
+  \item[24]\textbf{Bhatta BP.} Pay-as-you-weigh pricing of an air tickt: economics and major issues for discussions and investigations. \textit{J Revenue Pricing Manag.} 2013 Mar; 12:103-119.
+  \item[25]\textbf{Durston J.} Airline ``fat tax'': should heavy passengers pay more? \textit{CBB Travel.} 2013[cited 2016 Apr 22].
+  \item[26]\textbf{Nielsen MEJ, Andersen MM. }Should we hold the obese responsible? \textit{Camb Q Health Ethics.} 2014 Oct; 23: 443-451.
+  \item[27]\textbf{Apparicio P, Cloutier M-S, Shearmur R.} The case of Montr\'{e}al's missing food deserts: evaluation of accessibility to food supermarkets. \textit{Int J Health Geogr.} 2007 Feb 12;6:4.
+  \item[28]\textbf{Duvivier BMFM, Schaper NC, Bremers MA, et al.} Minimal intensity physical activity (standing and walking) of longer duration improves insulin action and plasma lipids more than shorter periods of moderate to vigorous exercise(cycling) in sedentary subjects when energy expenditure is comparable. \textit{PLoS One.}2013 Feb 13; 8:e55542.
+\end{description}
+
+% -- % -- % -- % -- % -- %
+\bibliographystyle{myrefstyle} %unsrt should work, too.  copy myrefstyle.bst in the same directory as the .tex file.
+\bibliography{../0Bib/ref} % Or wherever you keep your .bib file.
+
+% -- % -- % -- % -- % -- %
+\end{document}
