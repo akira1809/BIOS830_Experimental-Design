@@ -1,0 +1,109 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW3}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Question $2$.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	We can first compute $E[\text{SSA}]$. Notice that
+	\begin{align*}
+		\text{ssA} &= \sum_i \frac{y^2_{i\cdot\cdot}}{bn} - \frac{y^2_{\cdot\cdot\cdot}}{abn}
+	\end{align*}
+	So
+	\begin{align*}
+		E[\text{SSA}]  &= E\Big[\sum_i \frac{Y_{i\cdot\cdot}^2}{b\cdot n} - \frac{Y^2_{\cdot\cdot\cdot}}{abn}\Big]\\
+		&= \frac{1}{bn}\sum_i E\Big[Y^2_{i\cdot\cdot}\Big] - \frac{1}{abn}E\Big[Y^2_{\cdot\cdot}\Big]\\
+		&= \frac{1}{bn}\sum_i\Big\{\Big(E[Y_{i\cdot\cdot}]\Big)^2 + \text{Var}(Y_{i\cdot\cdot})\Big\} - \frac{1}{abn}\Big\{\Big(E[Y_{\cdot\cdot\cdot}]\Big)^2 + \text{Var}(Y_{\cdot\cdot\cdot})\Big\}\\
+		&= \frac{1}{bn}\sum_i\Big\{\Big(E[\sum_j\sum_t Y_{ijt}]\Big)^2 + bn\sigma^2\Big\} - \frac{1}{abn}\Big\{\Big(\sum_i\sum_j\sum_t Y_{ijt}\Big)^2 + abn\sigma^2\Big\}
+	\end{align*}
+	Notice that the term for $\sigma^2$ here is:
+	\begin{align*}
+		&\ \frac{1}{bn}\sum_i bn\sigma^2 - \frac{1}{abn}\cdot (abn)\sigma^2\\
+		&= \sum_i \sigma^2 - \sigma^2\\
+		&= (a - 1)\sigma^2
+	\end{align*}
+	so after we divide $a - 1$ for $\text{MSA}$ we will get $\sigma^2$.\vskip 2mm
+	 Meanwhile, the complete model is:
+	\begin{align*}
+		Y_{ijt} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijt}
+	\end{align*}
+	with restriction:
+	\begin{align*}
+		&\sum_i \alpha_i = \sum_j \beta_j = \sum_i(\alpha\beta)_{ij} = \sum_j(\alpha\beta)_{ij} = 0\\
+		&\text{the last two restriction is given in question 1 and lecture notes,}\\
+		&\text{but that does not make sense since if so, wouldn't }(\alpha\beta)_{i\cdot} = (\alpha\beta)_{\cdot j} = 0?
+	\end{align*} 
+	and then theoretically, with the right restrictionm, we plug the model back into the equation above, we get what we need.\vskip 2mm
+	(I need to discuss with you the algebra here).\vskip 2mm
+	For part $(b)$:\vskip 2mm
+	When all the main-effect parameters for factor $A$ are all equal, we get
+	\begin{align*}
+		\alpha_i = \alpha, 1 \leq i \leq a
+	\end{align*}
+	So 
+	\begin{align*}
+		\bar{\alpha} = \alpha
+	\end{align*}
+	and hence
+	\begin{align*}
+		E[MSA] = \sigma^2 + \frac{bn}{a - 1}\sum_i \cancel{(\alpha - \alpha)^2} = \sigma^2
+	\end{align*}
+	For part $(c)$:\vskip 2mm
+	
+\end{sol}
+\end{document}

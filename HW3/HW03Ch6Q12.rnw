@@ -1,0 +1,92 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW3}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch6 Question $12$.
+\begin{sol}
+	This is a question of power analysis (sample size computation).\vskip 2mm
+	We have $\Delta_A = \Delta_B = 4, \alpha = 0.05, \sigma^2 < 7.5, a = b = 3, \text{power} = 0.9$. We need to compute group sample size(by saying group we mean group of treatment combination here) $n$.\vskip 2mm
+	We have:
+	\begin{align*}
+		n = \frac{2a\sigma^2\phi^2}{b\Delta^2_A}
+	\end{align*}
+	for factor $A$ (word type) and 
+	\begin{align*}
+		n = \frac{2b\sigma^2\phi^2}{a\Delta^2_B}
+	\end{align*}
+	for factor $B$ (distraction type).\vskip 2mm
+	We have an issue here though, the response is not really normal, instead it is binomial. To properly do this problem, we need adjust our code for appropriate approximation. However we temporarily pretend we do not have this issue and just `play along':\vskip 2mm
+	Compute the effect size:
+  \begin{align*}
+    f = \sqrt{\frac{\frac{1}{3}(\frac{\Delta_{\text{A or B}}}{2})^2 + \frac{1}{3}(\frac{\Delta_{\text{A or B}}}{2})^2 }{\sigma^2}} = \sqrt{\frac{\Delta^2}{6\sigma^2}}
+  \end{align*}
+  and we got the following code to compute our sample size needed for each factor:
+	<<>>=
+	library(pwr)
+	delta = 4
+	alpha = 0.05
+	sigma_sqr = 7.5
+	#effective size
+	f <- sqrt(4*4/6/7.5)
+	#compute sample size
+	power <- pwr.anova.test(k = 3, n= NULL, f = f, sig.level=0.05, power = 0.9)
+	power
+	@
+	So for both factor $A$ and $B$, we need at least $13$ at each level (either A or B), which makes the total sample size be at least $13 \times 3 = 39$. However considering we are having a balanced study, we need the total sample size be the multiple of $9$, thus we need $45$ subjects in total, and $5$ in each treatment combination.
+ \end{sol}
+\end{document}

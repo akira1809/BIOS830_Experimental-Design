@@ -1,0 +1,101 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW3}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Question $3$.
+\begin{sol}
+	To check that two -factor crossed studies are generally more powerful than running two separate studies, we similate the data and compare the difference between their powers.
+	<<tidy = FALSE>>=
+	for (j in 1:100){
+  #two levels for A and three levels for B
+  #generate randomly assigned objects
+  a = sample(1:2, 100, replace = T)
+  b = sample(1:3, 100, replace = T)
+  ab = as.data.frame(cbind(a, b))
+  
+  #initilize pvalues
+  a2waypval <- c()
+  b2waypval <- c()
+  a1waypval <- c()
+  b1waypval <- c()
+  diffa <- c()
+  diffb <- c()
+  #simulate 1000 times
+  for (i in 1:1000){
+    #add normal noise to the two way model
+    ab$Y = ab$a + ab$b + rnorm(100, mean= 0, sd= 25)
+    #record pvalues
+    a2waypval[i] <- anova(lm(ab$Y~factor(ab$a)*factor(ab$b)))$"Pr(>F)"[1]
+    b2waypval[i] <- anova(lm(ab$Y~factor(ab$a)*factor(ab$b)))$"Pr(>F)"[2]
+    a1waypval[i] <- anova(lm(ab$Y~factor(ab$a)))$"Pr(>F)"[1]
+    b1waypval[i] <- anova(lm(ab$Y~factor(ab$b)))$"Pr(>F)"[1]
+  }
+  #compute power difference between two way and separate studies
+  diffa[j]<- (1-(length(a2waypval[a2waypval >=.05])/length(a2waypval)))- 
+    (1-(length(a1waypval[a1waypval>=.05])/length(a1waypval)))
+  diffb[j]<- (1-(length(b2waypval[b2waypval >=.05])/length(b2waypval)))- 
+    (1-(length(b1waypval[b1waypval>=.05])/length(b1waypval)))
+}
+#print the percentage of the simulations where two way model is more powerful
+length(diffa[diffa>0])/length(diffa)
+length(diffb[diffb>0])/length(diffb)
+
+	@
+	So we have seen that with close to $100\%$ the two way model is almost always more powerful than the seperate test. 
+\end{sol}
+\end{document}

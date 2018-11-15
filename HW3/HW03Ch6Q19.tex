@@ -1,0 +1,92 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW3}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch6 Question $19$.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	To verify the formula for computing $\text{ssE}$ of the main effects model, since we know the least square estimate for $\mu + \alpha_i + \beta_j$ is $\bar{y}_{i\cdot\cdot} + \bar{y}_{\cdot j \cdot} - \bar{y}_{\cdot\cdot\cdot}$, so
+	\begin{align*}
+		\text{ssE} &= \sum\sum\sum(y_{ijt} - \bar{y}_{i\cdot\cdot} - \bar{y}_{\cdot j \cdot} + \bar{y}_{\cdot\cdot\cdot})^2\\
+		&= \sum\sum\sum \Big(y^2_{ijt} + \bar{y}^2_{i\cdot\cdot} + \bar{y}^2_{\cdot j\cdot} + \bar{y}^2_{\cdot\cdot\cdot}- 2y_{ijt}\bar{y}_{i\cdot\cdot} - 2y_{ijt}\bar{y}_{\cdot j\cdot } + 2y_{ijt}\bar{y}_{\cdot\cdot\cdot} + 2\bar{y}_{i\cdot\cdot}\bar{y}_{\cdot j\cdot}\cdots\\
+		&\cdot - 2\bar{y}_{i\cdot\cdot}\bar{y}_{\cdot\cdot\cdot} - 2\bar{y}_{\cdot j\cdot}\bar{y}_{\cdot\cdot\cdot}\Big) \\
+		&= \sum\sum\sum y^2_{ijt} + bn\sum_i\bar{y}^2_{i\cdot\cdot} + an\sum_j\bar{y}^2_{\cdot j\cdot} + abn\bar{y}^2_{\cdot\cdot\cdot} - 2bn\sum_i \bar{y}^2_{i\cdot\cdot} - 2an\sum_j \bar{y}^2_{\cdot j\cdot}\cdots\\
+		&\cdots + \cancel{2abn\bar{y}^2_{\cdot\cdot\cdot}} + \cancel{2abn\bar{y}^2_{\cdot\cdot\cdot}}
+		- \cancel{2abn\bar{y}^2_{\cdot\cdot\cdot}} - \cancel{2abn\bar{y}^2_{\cdot\cdot\cdot}}\\
+		&= \sum\sum\sum y^2_{ijt} - bn\sum_i \bar{y}^2_{i\cdot\cdot} - an\sum_j\bar{y}^2_{\cdot j\cdot} + abn\bar{y}^2_{\cdot\cdot\cdot}\\
+		&= \sum\sum\sum y^2_{ijt} - \frac{1}{bn}\sum_i y^2_{i\cdot\cdot} - \frac{1}{an}\sum_j y^2_{\cdot j\cdot} + \frac{1}{abn}y^2_{\cdot\cdot\cdot} = (6.5.39)
+	\end{align*}
+	For part $(b)$:\vskip 2mm
+	we realize that we abused the notation a little when solving part $(a)$. To make it consistent with the conclusion asked to be proved, we now denote $n$ to be the total sample size and $r$ to be the group sample size with $a$ and $b$ be the number of treatment levels.\vskip 2mm
+	So from part $(a)$, we can replace small $y$ with big $Y$ to indicate random variables, thus we get:
+	\begin{align*}
+		E[\text{SSE}] &= \sum\sum\sum E[Y^2_{ijt}] - \frac{1}{br}\sum_i E[Y^2_{i\cdot\cdot}] - \frac{1}{ar}\sum_j E[Y^2_{\cdot j\cdot}] + \frac{1}{n}E[Y^2_{\cdot\cdot\cdot}]\\
+		&= \sum\sum\sum \Big\{\Big(E[Y_{ijt}]\Big)^2 + \underbrace{\text{Var}(Y_{ijt})}_{ = \sigma^2}\Big\} - \frac{1}{br}\sum_i\Big\{\Big(E[Y_{i\cdot\cdot}]\Big)^2 + \underbrace{\text{Var}(Y_{i\cdot\cdot})}_{= br\sigma^2}\Big\}\cdots\\
+		&\cdots - \frac{1}{ar}\sum_j\Big\{\Big(E[Y_{\cdot j\cdot}]\Big)^2 + \underbrace{\text{Var}(Y_{\cdot j\cdot})}_{= ar\sigma^2}\Big\} + \frac{1}{n}\Big\{\Big(E[Y_{\cdot\cdot\cdot}]\Big)^2 + \underbrace{\text{Var}(Y_{\cdot\cdot\cdot})}_{= n\sigma^2}\Big\}
+	\end{align*}
+	if we focus on all the variance terms, we find that we get
+	\begin{align*}
+	\sum\sum\sum \sigma^2 - \frac{1}{\cancel{br}}\sum_i \cancel{br}\sigma^2 - \frac{1}{\cancel{ar}}\sum_j \cancel{ar}\sigma^2 + \sigma^2 = (n-a-b + 1)\sigma^2
+	\end{align*}
+	which is what we need. so all we need to do for the rest of the part is to show:
+	\begin{align*}
+		\sum\sum\sum\Big(E[Y_{ijt}]\Big)^2 - \frac{1}{br}\sum_i\Big(E[Y_{i\cdot\cdot}]\Big)^2 - \frac{1}{ar}\sum_j\Big(E[Y_{\cdot j\cdot}]\Big)^2 + \frac{1}{n}\Big(E[Y_{\cdot\cdot\cdot}]\Big)^2 = 0
+	\end{align*}
+	This is easily done if we notice our model is $Y_{ijt} = \mu + \alpha_i + \beta_j + \epsilon_{ijt}$ with restrictions $\sum_i\alpha_i = 0$ and $\sum_j\beta_j = 0$
+\end{sol}
+\end{document}

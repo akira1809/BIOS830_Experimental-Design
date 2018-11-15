@@ -1,0 +1,99 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+\usepackage{Statrep}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW3}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch6 Question $8$.
+\begin{sol}
+	We actually used SAS to do this problem:
+	\begin{Datastep}
+	data Weld;
+	input Gauge $ Time $ Strength @@;
+	datalines;
+	 G1 T1 10 G1 T1 12 G1 T2 13 G1 T2 17 G1 T3 21 G1 T3 30 
+	 G1 T4 18 G1 T4 16 G1 T5 17 G1 T5 21 G2 T1 15 G2 T1 19 
+	 G2 T2 14 G2 T2 12 G2 T3 30 G2 T3 38 G2 T4 15 G2 T4 11 
+	 G2 T5 14 G2 T5 12 G3 T1 10 G3 T1 8  G3 T2 12 G3 T2 9  
+	 G3 T3 19 G3 T3 5  G3 T4 14 G3 T4 15 G3 T5 19 G3 T5 11 
+	;
+run;
+
+proc glm data = weld;
+	class gauge time;
+	model strength = gauge time gauge*time;
+	contrast 'linear gauge contrast' gauge -1 0 1;
+run;
+	\end{Datastep}
+	We present the output before we answer each part:
+	\begin{center}
+		\includegraphics[width = 10cm]{HW3Ch6Q8ANOVA.jpg}
+	\end{center}
+	also we have the interaction plot:
+	\begin{center}
+		\includegraphics[width = 10cm]{HW3Ch6Q8Inter.jpg}
+	\end{center}
+	So for part $(a)$:\vskip 2mm
+	Since the p value for interaction is $0.0242 < 0.05$, so we reject the null hypothesis. This is interpreted as, we think there should be an interaction between gage bar setting and time of weld.\vskip 2mm
+	For part $(b)$: \vskip 2mm
+	Just check the interaction plot above, apparently we do not have parallel pattern here between the treatment combinations, so it boost our conclusion from part $(a)$.\vskip 2mm
+	For part $(c)$: \vskip 2mm
+	It is {\bf NOT} sensible to inveestigate the differences between the effects of gage bar setting because there is interaction with the welding time, based on the graph of part $(b)$.\vskip 2mm
+	For part $(d)$: \vskip 2mm
+	Check the output we gave at the beginning for this specific trend contrast for gauge bar setting: $(-1, 0, 1)$. The pvalue is $0.0109 < 0.05$ so we reject the null, which is interpreted as that we think the linear trend in guage bar setting is {\bf NOT} negligible. 
+\end{sol}
+\end{document}

@@ -1,0 +1,133 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+\usepackage{statrep}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW3}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Ch7 Question $8$.
+\begin{sol}
+	for part $(a)$:\vskip 2mm
+	Since there is only interaction between $A$ and $B$, the model is
+	\begin{align*}
+		Y_{ijkt}&= \mu + \alpha_i + \beta_j + \gamma_k + (\alpha\beta)_{ij} + \epsilon_{ijket}, \text{ where }\epsilon_{ijkt} \sim N(0, \sigma^2), i.i.d.
+	\end{align*}
+	for part $(b)$:\vskip 2mm
+	the following contrasts may be of interest:
+	\begin{enumerate}
+		\item effect of contrast of factor A: $\bar{\tau}_{1\cdot\cdot} -\bar{\tau}_{2\cdot\cdot}$
+		\item effect of contrast of factor B: $\bar{\tau}_{\cdot 1\cdot} -\bar{\tau}_{\cdot 2\cdot}$ 
+		\item effect of contrast of factor C: $\bar{\tau}_{\cdot \cdot 1} -\bar{\tau}_{\cdot\cdot 2}$
+		\item effect of interaction contrast of factor A and B: $\bar{\tau}_{11\cdot} - \bar{\tau}_{12\cdot} - \bar{\tau}_{21\cdot} + \bar{\tau}_{22\cdot}$
+	\end{enumerate}
+	for part $(c)$:\vskip 2mm
+	we have the code:
+	\begin{Datastep}
+		data PaperTowelStrength;
+	input TreatCombo $ amount $ brand $ type $ strength order @@;
+	datalines;
+	 111 1 1 1 3279.0  3  111 1 1 1 4330.7 15  111 1 1 1 3843.7 16
+	 112 1 1 2 3260.8 11  112 1 1 2 3134.2 20  112 1 1 2 3206.7 22
+	 121 1 2 1 2889.6  5  121 1 2 1 3019.5  6  121 1 2 1 2451.5 21
+	 122 1 2 2 2323.0  1  122 1 2 2 2603.6  2  122 1 2 2 2893.8 14
+	 211 2 1 1 2964.5  4  211 2 1 1 4067.8 10  211 2 1 1 3327.0 18
+	 212 2 1 2 3114.2 12  212 2 1 2 3009.3 13  212 2 1 2 3242.0 19
+	 221 2 2 1 2883.4  9  221 2 2 1 2581.4 23  221 2 2 1 2385.9 24
+	 222 2 2 2 2142.3  7  222 2 2 2 2364.9  8  222 2 2 2 2189.9 17
+	;
+run;
+
+proc glm data = papertowelstrength;
+	class amount brand;
+	model strength = amount brand amount*brand;
+run;
+
+proc glm data = papertowelstrength;
+	class amount type;
+	model strength = amount type amount*type;
+run;
+
+proc glm data = papertowelstrength;
+	class brand type;
+	model strength = brand type brand*type;
+run;
+	\end{Datastep}
+	So for interaction between liquid amount and brand:
+	\begin{center}
+		\includegraphics[width = 10cm]{HW03Ch7Q8Inter_AB.jpg}
+	\end{center}
+	\begin{center}
+		\includegraphics[width = 10cm]{HW03Ch7Q8Inter_AC.jpg}
+	\end{center}
+	\begin{center}
+		\includegraphics[width = 10cm]{HW03Ch7Q8Inter_BC.jpg}
+	\end{center}
+	It seems that all lines are near to parallel so we conclude that there is no pairwise interaction.\vskip 2mm
+	For part $(d)$:\vskip 2mm
+	we run the reg procedure with SAS:
+	\begin{Datastep}
+		proc reg data=papertowelstrength;
+	model strength = amount brand type AB;
+run;
+	\end{Datastep}
+	and we got the following model dianostic sketches:
+	\begin{center}
+		\includegraphics[width = 10cm]{HW03Ch7Q8fitness.jpg}
+	\end{center}
+	residual and studentized residuals against predicted value give supportive information for equal variance assumption. QQ plot and histogram shows supportive signal for normal assumption.\vskip 2mm
+	We should really sketch residuals against input order to check independence, but I am very sorry that this time I did not manage to finish in time, same as the rest two sub problems.
+\end{sol}
+\end{document}

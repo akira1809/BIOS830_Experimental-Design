@@ -1,0 +1,108 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsfonts}
+
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsrefs}
+\usepackage{ulem}
+\usepackage[dvips]{graphicx}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{color}
+
+\setlength{\headheight}{26pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+
+\topmargin 0pt
+%Forrest Shortcuts
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{pf}{Proof}
+\newtheorem{sol}{Solution}
+\newcommand{\R}{{\ensuremath{\mathbb R}}}
+\newcommand{\J}{{\ensuremath{\mathbb J}}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\T}{{\mathbb T}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\st}{{\text{\ s.t.\ }}}
+\newcommand{\rto}{\hookrightarrow}
+\newcommand{\rtto}{\hookrightarrow\rightarrow}
+\newcommand{\tto}{\to\to}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\ep}{\epsilon}
+%CJ shortcuts
+\newcommand{\thin}{\thinspace}
+\newcommand{\beps}{\boldsymbol{\epsilon}}
+\newcommand{\bwoc}{by way of contradiction}
+
+%Munkres formatting?
+%\renewcommand{\theenumii}{\alph{enumi}}
+\renewcommand{\labelenumi}{\theenumi.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+
+\title{HW3}
+\author{Guanlin Zhang}
+
+\lhead{Dr Devin Koestler
+ \\BIOS 830} \chead{}
+\rhead{Guanlin Zhang\\Spring '17} \pagestyle{fancyplain}
+%\maketitle
+
+\begin{document}
+Question $1$.
+\begin{sol}
+	For part $(a)$:\vskip 2mm
+	When $n = 1$, the degree of freedom for $\text{ssE}$ is $N - ab = ab\cdot n - ab = ab - ab = 0$. Thus $\sigma^2$ can not be estimated.\vskip 2mm
+	For part $(b)$:\vskip 2mm
+	We want to show that $E[\text{MSE}] = \sigma^2$. We have the following computation:
+	\begin{align*}
+		E[\text{MSE}] &= E\Big[\frac{1}{e}\sum_{h = 1}^e\text{SSc}_h\Big] = \frac{1}{e}\sum_{h = 1}^{e}E\Big[\frac{(\sum\sum d_{ij}y_{ij})^2}{\sum\sum d_{ij}^2}\Big]\\
+		&= \frac{1}{e}\cdot \frac{1}{\sum\sum d_{ij}^2} \sum_{h = 1}^e E\Big[(\sum_i\sum_j d_{ij}y_{ij})^2\Big]\\
+		&=  \frac{1}{e}\cdot \frac{1}{\sum\sum d_{ij}^2} \sum_{h = 1}^e\Big\{\Big( E[\sum_i\sum_j d_{ij}y_{ij}]\Big)^2 + \text{Var}\Big(\sum_i\sum_j d_{ij}y_{ij}\Big)\Big\}
+	\end{align*}
+Recall from the restriction of the complete two way anova model: 
+\begin{align*}
+	\sum_i \alpha_i = \sum_j\beta_j = \sum_i(\alpha\beta)_{ij} = \sum_j(\alpha\beta)_{ij} = 0
+\end{align*}
+and the restriction of our contrast coeffecients:
+\begin{align*}
+	\sum_id_{ij} = \sum_j d_{ij} = 0 \text{ for any }i, j
+\end{align*}
+So the first expectation above is:
+\begin{align*}
+	E[\sum_i\sum_j d_{ij}y_{ij}] &= \sum_i\sum_j d_{ij}\Big(\mu + \alpha_i + \beta_j + (\alpha\beta)_{ij}\Big)\\
+	&= \mu\sum_i\cancel{\sum_j d_{ij}} + \cancel{\sum_i\alpha_i\sum_j d_{ij}}  + \cancel{\sum_j\beta_j\sum_i d_{ij}} + \sum_i\sum_j d_{ij}(\alpha\beta)_{ij}\\
+	&= 0 + 0 + 0 + \sum_i\sum_jd_{ij}(\alpha\beta)_{ij}\\
+	&= 0
+\end{align*}
+The last step above needs $\sum_i\sum_j d_{ij}(\alpha\beta)_{ij} = 0$ but this is no problem here,  because for the first $e$ orthogonal contrasts we already know in advance that they are likely to be negligible.\vskip 2mm
+On the other hand, let's look at the second part of the $E[\text{MSE}]$:
+\begin{align*}
+	\text{Var}(\sum_i\sum_j d_{ij}y_{ij}) &= \sum\sum d_{ij}^2\text{Var}(y_{ij}) = \sum_i\sum_j d^2_{ij}\sigma^2 = \sigma^2\sum_i\sum_jd^2_{ij}
+\end{align*}
+So put the information above together we have:
+\begin{align*}
+	E[\text{MSE}] &= \frac{1}{e}\cdot \frac{1}{\sum_i\sum_j d_{ij}^2}\sum_{h = 1}^e\Big\{\sigma^2\sum_i\sum_j d_{ij}^2\Big\}\\
+	&= \frac{\sigma^2\cdot \cancel{e\cdot \sum_i\sum_j d^2_{ij}}}{\cancel{e\cdot \sum_i\sum_jd_{ij}^2}}\\
+	&= \sigma^2
+\end{align*}
+Thus we have proved our intended result.\vskip 2mm
+For part $(c)$:\vskip 2mm
+our test statistic here is:
+\begin{align*}
+	\frac{\text{SSAB}_m/m}{\text{SSE}/e} = \frac{\text{SSAB}_m/m}{MSE}
+\end{align*}
+with $m = (a - 1)(b - 1) - e$. When under $H_0^{AB}$, the above test statistic follows $F_{m, e}$ distribution so the decision rule is:
+\begin{align*}
+	\left\{\begin{array}{ll} \text{reject } H_0^{AB} & \text{if }\frac{\text{SSAB}_m/m}{\text{SSE}/e} > F_{m, e, \alpha}\\ \text{retain} H_0^{AB} &  \text{ otherwise}\end{array}\right.
+\end{align*}
+\end{sol}
+\end{document}
